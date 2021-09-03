@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     };
     Product.init({
-        id: {
+        code: {
             type: DataTypes.INTEGER,
             notNull: true,
             uniqueKey: true,
