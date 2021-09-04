@@ -1,0 +1,21 @@
+<head>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<button id="dog">Dog!</button>
+<script>
+    const button = document.querySelector('#dog')
+    button.addEventListener('click', function(event){
+    //API로 요청을 보냄
+    const axiosResult = axios.post('http://localhost:4242/admin/product/register')
+        .then(function(response){
+            //handle sucess
+            console.log(response);
+        })
+        .catch(function(error){
+            //handle error
+            console.log(error);
+        })
+})
+</script>
+</body>

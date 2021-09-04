@@ -1,4 +1,4 @@
-// filename: ./config/index.js
+// filename: ./config/index.ejs
 // app.js에서 dotenv를 설정합니다.
 const env = process.env;
 

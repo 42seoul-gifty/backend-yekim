@@ -24,7 +24,6 @@
     "sequelize": "^6.6.5",
     "sequelize-cli": "^6.2.0"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/42seoul-gifty/backend-yekim.git"
