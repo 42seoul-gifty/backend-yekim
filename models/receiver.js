@@ -5,6 +5,9 @@ const {
 module.exports = (sequelize, DataTypes) => {
     class Receiver extends Model {
         static associate(models) {
+            Receiver.belongsTo(models.Product, {
+                foreignKey: 'product_id',
+            });
         }
     };
     Receiver.init({
