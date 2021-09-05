@@ -6,12 +6,25 @@ exports.renderProductManage = function (req, res, next) {
 }
 
 exports.renderProductRegister = function (req, res, next) {
-    res.render('admin/productRegister');
+    res.render('admin/productRegister', {
+        title: "This is Title"
+    });
 }
 
 exports.displayProduct = async function (req, res, next) {
-    const productFilter = req.body;
-    console.log(productFilter);
+    const productFilterValue = req.body;
+    // TODO: 필터 카테고리 사용하여 데이터 가져오기
+    try {
+        let productsToMakeList = [];
+        const products = await Product.findAll();
+        products.forEach(product => {
+            productsToMakeList.push(product.dataValues);
+        });
+        res.json(productsToMakeList);
+    } catch (err) {
+        console.error('[admin] 조건에 맞는 상품 조회 오류:', err);
+        next(err);
+    }
 }
 
 exports.registerProduct = async function (req, res, next) {
