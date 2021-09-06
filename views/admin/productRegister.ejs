@@ -21,21 +21,6 @@
     <div class="col-3">
     </div>
     <div class="col-9" style="padding-top: 30px;">
-        <!--        <div class="input-group mb-3">-->
-        <!--            <span class="input-group-text" id="basic-addon1">상품코드</span>-->
-        <!--            <input id="product_code" type="text" class="form-control"aria-describedby="basic-addon1">-->
-        <!--        </div>-->
-<!--        <div class="input-group mb-3">-->
-<!--            <select id="category" class="form-select" aria-label="Default select example">-->
-<!--                <option selected>카테고리</option>-->
-<!--                <option value="화장품">화장품</option>-->
-<!--                <option value="식품">식품</option>-->
-<!--                <option value="건강">건강</option>-->
-<!--                <option value="리빙">리빙</option>-->
-<!--                <option value="패션잡화">패션잡화</option>-->
-<!--                <option value="디지털">디지털</option>-->
-<!--            </select>-->
-<!--        </div>-->
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">상품코드</span>
             <input id="product_code" type="text" class="form-control" aria-describedby="basic-addon1">
@@ -46,69 +31,17 @@
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">썸네일</span>
-            <input id="product_thumbnail" type="text" class="form-control" aria-describedby="basic-addon1">
+            <input id="product_thumbnail" name="thumbnail" type="file" class="form-control" aria-describedby="basic-addon1" accept="image/*">
         </div>
-<!--        <div class="input-group mb-3">-->
-<!--            <span class="input-group-text" id="basic-addon1">이미지</span>-->
-<!--            <textarea id="image" class="form-control" rows="5" placeholder="쉼표(,)로 구분해주세요"></textarea>-->
-<!--        </div>-->
-<!--        <div class="input-group mb-3">-->
-<!--            <span class="input-group-text" id="basic-addon1">판매처</span>-->
-<!--            <input id="brand" type="text" class="form-control" aria-describedby="basic-addon1">-->
-<!--        </div>-->
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">소비자가</span>
             <input id="product_price" type='number' class="form-control" aria-describedby="basic-addon1"
                    placeholder=",를 떼고 숫자만 입력해주세요">
         </div>
-<!--        <div class="input-group mb-3">-->
-<!--            <span class="input-group-text" id="basic-addon1">수수료율</span>-->
-<!--            <input id="fee_rate" type='number' class="form-control" aria-describedby="basic-addon1"-->
-<!--                   placeholder=",를 떼고 숫자만 입력해주세요">-->
-<!--        </div>-->
-<!--        <div class="input-group mb-3">-->
-<!--            <span class="input-group-text" id="basic-addon1">링크</span>-->
-<!--            <input id="link" type="text" class="form-control" aria-describedby="basic-addon1">-->
-<!--        </div>-->
-<!--        <div class="input-group mb-3">-->
-<!--            <span class="input-group-text" id="basic-addon1">상품소개</span>-->
-<!--            <input id="title" class="form-control" aria-describedby="basic-addon1">-->
-<!--        </div>-->
-<!--        <div class="input-group mb-3">-->
-<!--            <span class="input-group-text" id="basic-addon1">상품정보제공고시</span>-->
-<!--            <textarea id="sub_title" class="form-control" rows="16"></textarea>-->
-<!--        </div>-->
-<!--        <div class="input-group mb-3  register">-->
-<!--            <select id="gender" class="form-select multiple" multiple="multiple">-->
-<!--                <option value="남성">남성</option>-->
-<!--                <option value="여성">여성</option>-->
-<!--            </select>-->
-<!--        </div>-->
-<!--        <div class="input-group mb-3 register">-->
-<!--            <select id="age" class="form-select multiple" multiple="multiple">-->
-<!--                <option value="20~24세">20~24세</option>-->
-<!--                <option value="25~29세">25~29세</option>-->
-<!--                <option value="30~34세">30~34세</option>-->
-<!--                <option value="35~39세">35~39세</option>-->
-<!--                <option value="40~44세">40~44세</option>-->
-<!--                <option value="45세 이상">45세 이상</option>-->
-<!--            </select>-->
-<!--        </div>-->
-<!--        <select id="price" class="form-select" aria-label="Default select example">-->
-<!--            <option selected>가격</option>-->
-<!--            <option value="1만 5천원">1만 5천원</option>-->
-<!--            <option value="2만원">2만원</option>-->
-<!--            <option value="2만 5천원">2만 5천원</option>-->
-<!--            <option value="3만원">3만원</option>-->
-<!--            <option value="3만 5천원">3만 5천원</option>-->
-<!--            <option value="4만원">4만원</option>-->
-<!--            <option value="4만 5천원">4만 5천원</option>-->
-<!--            <option value="5만원">5만원</option>-->
-<!--        </select>-->
         <br>
         <br>
-        <button id="register" type="button" class="btn btn-primary" onclick="save()"
-                style="width: 200px; height:50px; margin: 0 40%;">저장
+        <button id="register" type="button" class="btn btn-primary" onclick="save()" style="width: 200px; height:50px; margin: 0 40%;">
+            저장
         </button>
         <br>
         <br>
@@ -124,16 +57,15 @@
 </body>
 <script>
     function save() {
-        let productValue = {};
-        productValue.code = document.getElementById('product_code').value
-        productValue.name = document.getElementById('product_name').value
-        productValue.thumbnail = document.getElementById('product_thumbnail').value
-        productValue.price = document.getElementById('product_price').value
-        axios.post('http://localhost:4242/admin/product/register', {
-            code: productValue.code,
-            name: productValue.name,
-            thumbnail: productValue.thumbnail,
-            price: productValue.price,
+        const formData = new FormData();
+        formData.append('code', document.getElementById('product_code').value);
+        formData.append('name', document.getElementById('product_name').value);
+        formData.append('thumbnail', document.getElementById('product_thumbnail').files[0]);
+        formData.append('price', document.getElementById('product_price').value);
+        axios.post('http://localhost:4242/admin/product/register', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data;'
+            }
         })
             .then(function(response){
                 console.log(response);
@@ -143,8 +75,6 @@
                 console.log(error);
             })
     }
-
-
 
     // (function ($) {
     //     $(function () {

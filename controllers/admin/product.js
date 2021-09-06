@@ -6,6 +6,7 @@ exports.renderProductManage = function (req, res, next) {
 }
 
 exports.renderProductRegister = function (req, res, next) {
+    // res.render('admin/imgUploadTest');
     res.render('admin/productRegister', {
         title: "This is Title"
     });
@@ -29,18 +30,19 @@ exports.displayProduct = async function (req, res, next) {
 
 exports.registerProduct = async function (req, res, next) {
     const productInfo = req.body;
-    console.log(req.body);
+    const productFile = req.file;
+    console.log('등록을 위한 데이터:', 'body:', req.body, '\nfile:', req.file);
     try {
         const product = await Product.create({
             code: productInfo.code,
             name: productInfo.name,
-            thumbnail: productInfo.thumbnail,
+            thumbnail: productFile.path,
             price: parseInt(productInfo.price, 10),
         });
         console.log("저장된 모델 데이터: ", product.dataValues);
+        res.json("Product Register complete");
     } catch (err) {
         console.err("[admin] 상품 저장 오류:", err);
         next(err);
     }
-    res.json("Product Register complete");
 }
