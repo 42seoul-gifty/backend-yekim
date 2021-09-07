@@ -18,8 +18,10 @@ const authController = require('../controllers/auth');
 router.get('/login', authController.getTokens);
 router.post('/logout', authController.unsetJwt);
 
+const userRouter = require('../routes/user');
+router.use('/users', userRouter);
+
 const receiverRouter = require('../routes/receiver');
 router.use('/receiver', receiverRouter);
-
 
 module.exports = router;
