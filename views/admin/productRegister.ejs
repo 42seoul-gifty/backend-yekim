@@ -5,12 +5,6 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"-->
-<!--            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"-->
-<!--            crossorigin="anonymous"></script>-->
-<!--    <link href="/stylesheets/fSelect.css" rel="stylesheet">-->
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
-<!--    <script src="/javascripts/fSelect.js"></script>-->
 
     <style>
     </style>
@@ -53,7 +47,6 @@
     </div>
 </div>
 
-</div>
 </body>
 <script>
     function save() {
@@ -75,93 +68,6 @@
                 console.log(error);
             })
     }
-
-    // (function ($) {
-    //     $(function () {
-    //         // if(sessionStorage.getItem('login')!=='true'){
-    //         //     alert("로그인이 필요한 서비스입니다.")
-    //         //     location.href="https://gifty4u.com/admin"
-    //         // }
-    //         window.fs_test = $('#age').fSelect({
-    //             placeholder: '연령',
-    //             numDisplayed: 3,
-    //             overflowText: '{n} selected',
-    //             noResultsText: 'No results found',
-    //             searchText: 'Search',
-    //             showSearch: false
-    //         });
-    //
-    //         window.fs_test = $('#gender').fSelect({
-    //             placeholder: '성별',
-    //             numDisplayed: 3,
-    //             overflowText: '{n} selected',
-    //             noResultsText: 'No results found',
-    //             searchText: 'Search',
-    //             showSearch: false
-    //         });
-    //     });
-    // })(jQuery);
-    //
-    //
-    // function save() {
-    //     let images = $('#image').val().split(",");
-    //     let ages = $('#age option:selected').map(function () {
-    //         return this.value;
-    //     }).get();
-    //     let genders = $('#gender option:selected').map(function () {
-    //         return this.value;
-    //     }).get();
-    //     // if($('#product_code').val()===""){alert("상품코드는 필수입력입니다.")}
-    //     if (genders.length < 1) {
-    //         alert("성별을 선택해주세요.")
-    //     } else if (ages.length < 1) {
-    //         alert("연령대를 하나이상 선택해주세요.")
-    //     } else if ($('#price option:selected').val() === "가격") {
-    //         alert("가격을 선택해주세요.")
-    //     } else {
-    //         let retail_price = $('#retail_price').val()
-    //         if (retail_price === '') {
-    //             retail_price = 0
-    //         }
-    //         let fee_rate = $('#fee_rate').val()
-    //         if (fee_rate === '') {
-    //             fee_rate = 0
-    //         }
-    //         let sub_title = $('#sub_title').val().replace(/\n/gi, '<br>');
-    //         fetch("http://localhost:4242/admin/product/register", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({
-    //                 product_code: $('#product_code').val(),
-    //                 category: $('#category').val(),
-    //                 product_name: $('#product_name').val(),
-    //                 thumbnail: $('#thumbnail').val(),
-    //                 image: images,
-    //                 brand: $('#brand').val(),
-    //                 link: $('#link').val(),
-    //                 retail_price: retail_price,
-    //                 fee_rate: fee_rate,
-    //                 title: $('#title').val(),
-    //                 sub_title: sub_title,
-    //                 gender: genders,
-    //                 age: ages,
-    //                 price: $('#price option:selected').val()
-    //             }),
-    //         }).then((response) => response.json())
-    //             .then((res) => {
-    //                 console.log(res.data)
-    //                 if (res.data === 'save') {
-    //                     alert("제품이 저장되었습니다.")
-    //                     window.location.reload();
-    //                 }
-    //             }).catch((err) => {
-    //             alert(err.error)
-    //             console.log(err.error)
-    //         })
-    //     }
-    // }
 </script>
 </html>
 

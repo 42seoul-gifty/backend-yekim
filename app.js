@@ -1,10 +1,10 @@
 process.env.NODE_ENV = ( process.env.NODE_ENV && ( process.env.NODE_ENV ).trim().toLowerCase() == 'production' ) ? 'production' : 'development';
 const express = require('express');
-const session = require('express-session');
 const dotenv = require('dotenv');
 const logger = require('morgan');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 dotenv.config();
 
@@ -28,9 +28,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+// TODO: Front-end 파트와 상의후 옵션 변경
+app.use(cors());
 
 const indexRouter = require('./routes/');
 app.use('/', indexRouter);
+
+const authRouter = require('./routes/auth');
+app.use('/auth', authRouter);
 
 const receiverRouter = require('./routes/receiver');
 app.use('/receiver', receiverRouter);

@@ -8,6 +8,9 @@ module.exports = (sequelize, DataTypes) => {
             Receiver.belongsTo(models.Product, {
                 foreignKey: 'product_id',
             });
+            Receiver.belongsTo(models.Order, {
+                foreignKey: 'order_id',
+            });
         }
     };
     Receiver.init({
@@ -23,7 +26,19 @@ module.exports = (sequelize, DataTypes) => {
         phone: {
             type: DataTypes.STRING,
             notNull: true,
-        }
+        },
+        postCode: {
+            type: DataTypes.INTEGER,
+            notNull: true,
+        },
+        address: {
+            type: DataTypes.STRING,
+            notNull: true,
+        },
+        detailAddress: {
+            type: DataTypes.STRING,
+            notNull: true,
+        },
     }, {
         sequelize,
         modelName: 'Receiver',

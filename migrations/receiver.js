@@ -14,6 +14,15 @@ module.exports = {
             phone: {
                 type: Sequelize.STRING
             },
+            postCode: {
+                type: Sequelize.INTEGER
+            },
+            address: {
+                type: Sequelize.STRING
+            },
+            detailAddress: {
+                type: Sequelize.STRING
+            }
         });
     },
     down: async (queryInterface, Sequelize) => {
