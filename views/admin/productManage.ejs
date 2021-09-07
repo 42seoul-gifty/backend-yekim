@@ -140,7 +140,7 @@
         filterValue.price = document.getElementById('price').value
         filterValue.category = document.getElementById('category').value
         try {
-            const axiosResult = await axios.post('http://localhost:4242/admin/product/', {
+            const axiosResult = await axios.post('http://localhost:4242/admin/product/manage', {
                 gender: filterValue.gender,
                 age: filterValue.age,
                 price: filterValue.price,
