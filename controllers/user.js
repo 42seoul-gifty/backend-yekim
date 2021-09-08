@@ -1,6 +1,7 @@
 const { User, Order, Receiver, Product} = require('../models');
 
 const setResponseForm = require('../libs/setResponseForm');
+const getReceiverDetailForm = require('../libs/getReceiverDetailForm');
 
 // TODO: user_id로 user 검증하는 알고리즘 삽입하기
 // TODO: preference 모델 추가하기
@@ -13,28 +14,10 @@ exports.readOrderById = async function (req, res, next) {
             where: { order_id: orderId },
             include: [Product, Order],
         });
-        const product = receiver[0].dataValues.Product;
-        const order = receiver[0].dataValues.Order;
-        const receiverData = receiver[0].dataValues;
-        console.log(receiverData);
-
-        const productDetail = {
-            id: product.id,
-            code: product.code,
-            thumbnail: product.thumbnail,
-            price: product.price,
-        }
-        const receiverDetail = {
-            id: receiverData.id,
-            name: receiverData.name,
-            phone: receiverData.phone,
-            product: productDetail,
-            address: {
-                post_code: receiverData.postCode,
-                address: receiverData.address,
-                detail: receiverData.detailAddress,
-            }
-        }
+        const firstReciever = receiver[0];
+        const order = firstReciever.dataValues.Order;
+        const receiverData = firstReciever.dataValues;
+        const receiverDetail = getReceiverDetailForm(firstReciever);
         const data = {
             giver_name: order.giverName,
             giver_phone: order.giverPhone,
@@ -59,7 +42,6 @@ exports.readOrders = async function (req, res, next) {
         orders.forEach(order => {
             orderList.push(order.dataValues);
         })
-        console.log(orderList);
         const data = orderList;
         const msg = '주문 조회가 완료되었습니다.';
         const ret = setResponseForm(true, data, msg);

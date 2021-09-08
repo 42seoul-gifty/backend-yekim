@@ -1,5 +1,6 @@
-const { Receiver, Product } = require('../models');
+const { Receiver, Order, Product } = require('../models');
 const setResponseForm = require('../libs/setResponseForm');
+const getProductDetailForm = require('../libs/getProductDetailForm');
 
 exports.readReceiverById = async function (req, res, next) {
     const receiverId = req.params.id;
@@ -26,11 +27,11 @@ exports.pickProduct = async function (req, res, next) {
         const receiver = await Receiver.findOne({
             where: { id: receiverId }
         });
-        receiver.postCode = receiverInfo.post_code;
+        receiver.postcode = receiverInfo.post_code;
         receiver.address = receiverInfo.address;
         receiver.detailAddress = receiverInfo.address_detail;
         await receiver.save({
-            fields: ['postCode', 'address', 'detailAddress']
+            fields: ['postcode', 'address', 'detailAddress']
         });
         const product = await Product.findOne({
             where: { code: receiverInfo.product_id }
@@ -49,15 +50,20 @@ exports.getReceiverChoice = async function (req, res, next) {
     const receiverId = req.params.id;
     try {
         const receiver = await Receiver.findOne({
-            where: { id: receiverId }
+            where: { id: receiverId },
+            include: [ Order, Product ]
         });
-        const order = await receiver.getOrder();
-        console.log(order);
-        res.json("order를 잘 가져왔습니다.");
-
+        const productDetail = getProductDetailForm(receiver.Product);
+        const data = {
+            giver_name: receiver.Order.giverName,
+            giver_phone: receiver.Order.giverPhone,
+            product: productDetail,
+        }
+        const msg = '해당 수신자 데이터 전달 완료';
+        const ret = setResponseForm(true, data, msg);
+        res.json(ret);
     } catch (err) {
         console.error("수신자 선택 정보 조회 오류:", err);
         next(err);
     }
-
 }

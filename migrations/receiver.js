@@ -14,7 +14,7 @@ module.exports = {
             phone: {
                 type: Sequelize.STRING
             },
-            postCode: {
+            postcode: {
                 type: Sequelize.INTEGER
             },
             address: {
