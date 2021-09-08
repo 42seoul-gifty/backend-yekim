@@ -60,11 +60,11 @@ exports.createOrder = async function (req, res, next) {
         const order = await Order.create({
             giverName: orderInfo.giver_name,
             giverPhone: orderInfo.giver_phone,
-        })
+        });
         const receiver = await Receiver.create({
             name: orderInfo.receiver_name,
             phone: orderInfo.receiver_phone
-        })
+        });
         user.addOrder(order);
         order.addReceiver(receiver);
         const msg = '주문 생성이 완료되었습니다.';

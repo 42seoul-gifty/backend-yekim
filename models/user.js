@@ -25,10 +25,6 @@ module.exports = (sequelize, DataTypes) => {
         email: {
             type: DataTypes.STRING,
             notNull: true,
-        },
-        phone: {
-            type: DataTypes.STRING,
-            notNull: true,
         }
     }, {
         sequelize,

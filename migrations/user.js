@@ -14,9 +14,6 @@ module.exports = {
             email: {
                 type: Sequelize.STRING
             },
-            phone: {
-                type: Sequelize.STRING
-            }
         });
     },
     down: async (queryInterface, Sequelize) => {

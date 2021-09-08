@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
             Preference.hasOne(models.Receiver, {
                 foreignKey: 'preference_id',
                 // TODO: cascade 관계들 설정하기
-                onDelete: 'cascade',
+                // onDelete: 'cascade',
             });
         }
     };
