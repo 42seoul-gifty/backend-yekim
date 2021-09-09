@@ -14,6 +14,7 @@ module.exports = {
             detail: '철 70% 봉 30%',
             age_id: 1,
             price_id: 1,
+            category_id: 1,
             gender: '전체',
             price: 15000,
         }, {
@@ -25,6 +26,7 @@ module.exports = {
             detail: '모델명: KING310',
             age_id: 2,
             price_id: 2,
+            category_id: 3,
             gender: '여',
             price: 20000,
         }, {
@@ -36,6 +38,7 @@ module.exports = {
             detail: '최대 소비전력: 30Wh',
             age_id: 3,
             price_id: 5,
+            category_id: 3,
             gender: '전체',
             price: 35000,
         }, {
@@ -43,21 +46,23 @@ module.exports = {
             code: 704,
             name: '아령',
             thumbnail: thumbnailDir + '아령' + '.' + extName,
-            description: '가볍습니다.',
+            description: '가벼워서 운동이 안 될지도 모릅니다.',
             detail: '철 20%',
             age_id: 1,
             price_id: 1,
+            category_id: 1,
             gender: '전체',
             price: 15000,
         }, {
             id: 5,
             code: 705,
             name: '골프장갑',
-            description: '손에 착착 감깁니다.',
+            description: '미끄러워서 채를 놓칠 수도 있습니다.',
             detail: '고무 70%',
             thumbnail: thumbnailDir + '골프장갑' + '.' + extName,
             age_id: 1,
             price_id: 1,
+            category_id: 1,
             gender: '전체',
             price: 15000,
         }, {
@@ -69,6 +74,7 @@ module.exports = {
             thumbnail: thumbnailDir + '매니큐어' + '.' + extName,
             age_id: 1,
             price_id: 1,
+            category_id: 5,
             gender: '전체',
             price: 15000,
         }];
