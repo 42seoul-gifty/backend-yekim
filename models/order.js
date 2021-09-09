@@ -8,6 +8,9 @@ module.exports = (sequelize, DataTypes) => {
             Order.hasMany(models.Receiver, {
                 foreignKey: 'order_id',
             });
+            Order.belongsTo(models.Product, {
+                foreignKey: 'product_id',
+            });
         }
     };
     Order.init({
@@ -23,7 +26,11 @@ module.exports = (sequelize, DataTypes) => {
         giverPhone: {
             type: DataTypes.STRING,
             allowNull: true,
-        }
+        },
+        gender: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     }, {
         sequelize,
         modelName: 'Order',

@@ -14,6 +14,9 @@ module.exports = {
             giverPhone: {
                 type: Sequelize.STRING
             },
+            gender: {
+                type: Sequelize.STRING
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE

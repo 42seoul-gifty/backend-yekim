@@ -1,4 +1,4 @@
-const { User, Order, Receiver, Product} = require('../models');
+const { User, Order, Receiver, Product, Age, Price} = require('../models');
 
 const setResponseForm = require('../libs/setResponseForm');
 const getReceiverDetailForm = require('../libs/getReceiverDetailForm');
@@ -60,13 +60,18 @@ exports.createOrder = async function (req, res, next) {
         const order = await Order.create({
             giverName: orderInfo.giver_name,
             giverPhone: orderInfo.giver_phone,
+            gender: orderInfo.gender,
         });
         const receiver = await Receiver.create({
             name: orderInfo.receiver_name,
             phone: orderInfo.receiver_phone
         });
-        user.addOrder(order);
+        const age = await Age.findByPk(orderInfo.age);
+        const price = await Price.findByPk(orderInfo.price);
+        age.addOrder(order);
+        price.addOrder(order);
         order.addReceiver(receiver);
+        user.addOrder(order);
         const msg = '주문 생성이 완료되었습니다.';
         const data = { merchant_uid: order.id };
         const ret = setResponseForm(true, data, msg);

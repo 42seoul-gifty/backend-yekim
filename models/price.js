@@ -4,11 +4,14 @@ const {
 } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class AgeCategory extends Model {
+    class Price extends Model {
         static associate(models) {
+            Price.hasMany(models.Order, {
+                foreignKey: 'price_id',
+            });
         }
     };
-    AgeCategory.init({
+    Price.init({
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -21,9 +24,9 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         sequelize,
-        modelName: 'AgeCategory',
-        tableName: 'agecategorys',
+        modelName: 'Price',
+        tableName: 'prices',
         timestamps: false,
     });
-    return AgeCategory;
+    return Price;
 };
