@@ -29,7 +29,11 @@ module.exports = (sequelize, DataTypes) => {
         price: {
             type: DataTypes.INTEGER,
             notNull: true
-        }
+        },
+        gender: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
     }, {
         sequelize,
         modelName: 'Product',

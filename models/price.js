@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
             Price.hasMany(models.Order, {
                 foreignKey: 'price_id',
             });
+            Price.hasMany(models.Product, {
+                foreignKey: 'price_id',
+            });
         }
     };
     Price.init({

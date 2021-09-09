@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
             Age.hasMany(models.Order, {
                 foreignKey: 'age_id',
             });
+            Age.hasMany(models.Product, {
+                foreignKey: 'age_id',
+            });
         }
     };
     Age.init({

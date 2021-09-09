@@ -25,7 +25,8 @@ exports.pickProduct = async function (req, res, next) {
     const receiverInfo = req.query;
     try {
         const receiver = await Receiver.findOne({
-            where: { id: receiverId }
+            where: { id: receiverId },
+            include: Order
         });
         receiver.postcode = receiverInfo.post_code;
         receiver.address = receiverInfo.address;
@@ -36,7 +37,7 @@ exports.pickProduct = async function (req, res, next) {
         const product = await Product.findOne({
             where: { code: receiverInfo.product_id }
         })
-        const result = await product.addReceiver(receiver);
+        const result = await product.addOrder(receiver.Order);
         const ret = setResponseForm(true, "", "수신자 선물 선택 완료");
         res.json(ret);
     } catch (err) {
@@ -46,18 +47,31 @@ exports.pickProduct = async function (req, res, next) {
 }
 
 // TODO: Receiver를 통한 주문 조회 계속해서 구현
-exports.getReceiverChoice = async function (req, res, next) {
+exports.getProductsChoiceList = async function (req, res, next) {
     const receiverId = req.params.id;
     try {
         const receiver = await Receiver.findOne({
             where: { id: receiverId },
-            include: [ Order, Product ]
+            include: Order,
         });
-        const productDetail = getProductDetailForm(receiver.Product);
+        const order = receiver.Order;
+        const products = await Product.findAll({
+            where: {
+                gender: order.gender,
+                age_id: order.age_id,
+                price_id: order.price_id,
+            }
+        })
+        console.log(products);
+        let productDetails = [];
+        products.forEach((product) => {
+           productDetails.push(getProductDetailForm(product));
+        })
+
         const data = {
-            giver_name: receiver.Order.giverName,
-            giver_phone: receiver.Order.giverPhone,
-            product: productDetail,
+            giver_name: order.giverName,
+            giver_phone: order.giverPhone,
+            product: productDetails,
         }
         const msg = '해당 수신자 데이터 전달 완료';
         const ret = setResponseForm(true, data, msg);

@@ -16,6 +16,9 @@ module.exports = {
             },
             price: {
                 type: Sequelize.INTEGER
+            },
+            gender: {
+                type: Sequelize.STRING
             }
         });
     },

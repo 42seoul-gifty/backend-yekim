@@ -2,7 +2,6 @@
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        const productsNum = 5;
         const extName = 'jpeg';
         const thumbnailDir = '/tmp/example_thumbnails';
 
@@ -13,18 +12,27 @@ module.exports = {
             code: 701,
             name: productNames[0],
             thumbnail: thumbnailDir + productNames[0] + '.' + extName,
+            age_id: 1,
+            price_id: 1,
+            gender: '남',
             price: 15000,
         }, {
             id: 2,
             code: 702,
             name: productNames[1],
             thumbnail: thumbnailDir + productNames[1] + '.' + extName,
-            price: 10000,
+            age_id: 2,
+            price_id: 2,
+            gender: '여',
+            price: 20000,
         }, {
             id: 3,
             code: 703,
             name: productNames[2],
             thumbnail: thumbnailDir + productNames[2] + '.' + extName,
+            age_id: 3,
+            price_id: 5,
+            gender: '전체',
             price: 35000,
         }];
         await queryInterface.bulkInsert('products', productSeed, {});

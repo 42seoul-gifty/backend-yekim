@@ -2,6 +2,7 @@ const { User, Order, Receiver, Product, Age, Price} = require('../models');
 
 const setResponseForm = require('../libs/setResponseForm');
 const getReceiverDetailForm = require('../libs/getReceiverDetailForm');
+const getOrderDetailForm = require('../libs/getOrderDetailForm');
 
 // TODO: user_id로 user 검증하는 알고리즘 삽입하기
 // TODO: preference 모델 추가하기
@@ -10,25 +11,18 @@ const getReceiverDetailForm = require('../libs/getReceiverDetailForm');
 exports.readOrderById = async function (req, res, next) {
     const orderId = req.params.order_id;
     try {
-        const receiver = await Receiver.findAll({
-            where: { order_id: orderId },
-            include: [Product, Order],
+        const order = await Order.findOne({
+            where: { id: orderId },
+            include: Product,
         });
-        const firstReciever = receiver[0];
-        const order = firstReciever.dataValues.Order;
-        const receiverData = firstReciever.dataValues;
-        const receiverDetail = getReceiverDetailForm(firstReciever);
-        const data = {
-            giver_name: order.giverName,
-            giver_phone: order.giverPhone,
-            receiver: receiverDetail,
-            order_date: order.createdAt.toString(),
-        }
+        const orderDetail = await getOrderDetailForm(order);
+
+        const data = orderDetail;
         const msg = '주문 조회가 완료되었습니다.';
         const ret = setResponseForm(true, data, msg);
         res.json(ret);
     } catch (err) {
-        console.log('주문 조회 오류:', err);
+        console.log('특정 주문 조회 오류:', err);
         next(err);
     }
 }
@@ -37,17 +31,21 @@ exports.readOrders = async function (req, res, next) {
     const userId = req.params.user_id;
     try {
         const user = await User.findByPk(userId);
-        const orders = await user.getOrder();
-        const orderList = [];
-        orders.forEach(order => {
-            orderList.push(order.dataValues);
-        })
+        const orders = await user.getOrder({
+            include: Product,
+        });
+        let orderList = [];
+        for (let idx = 0; idx < orders.length; ++idx) {
+            const tmpOrderDetail = await getOrderDetailForm(orders[idx]);
+            orderList.push(tmpOrderDetail);
+        }
+
         const data = orderList;
         const msg = '주문 조회가 완료되었습니다.';
         const ret = setResponseForm(true, data, msg);
         res.json(ret);
     } catch (err) {
-        console.log('주문 생성 오류:', err);
+        console.log('주문 조회 오류:', err);
         next(err);
     }
 }
@@ -83,13 +81,15 @@ exports.createOrder = async function (req, res, next) {
 }
 
 // TODO: user_id로 user 검증하는 알고리즘 삽입하기
+// TODO: 활성화 / 비활성화 적용시키기
 exports.deleteOrder = async function (req, res, next) {
     const userId = req.params.user_id;
     const orderId = req.params.order_id;
     try {
-        Order.destroy({
+        await Order.destroy({
             where: { id: orderId },
         });
+
         const msg = '해당 주문이 제거 되었습니다.'
         const ret = setResponseForm(true, "", msg);
         res.json(ret)
@@ -97,5 +97,4 @@ exports.deleteOrder = async function (req, res, next) {
         console.log('주문 삭제 오류:', err);
         next(err);
     }
-
 }
