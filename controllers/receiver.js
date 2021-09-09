@@ -1,17 +1,15 @@
-const { Receiver, Order, Product } = require('../models');
+const { Receiver, Order, Product, Like } = require('../models');
 const setResponseForm = require('../libs/setResponseForm');
 const getProductDetailForm = require('../libs/getProductDetailForm');
 
 exports.readReceiverById = async function (req, res, next) {
     const receiverId = req.params.id;
-    console.log(receiverId);
     try {
         const receiver = await Receiver.findOne({
             where: { id: receiverId },
             attributes: ['id', 'name', 'phone'],
             include: Product,
         });
-        console.log(receiver);
         const ret = setResponseForm(true, receiver, "hihi");
         res.json(ret);
     } catch (err) {
@@ -22,7 +20,10 @@ exports.readReceiverById = async function (req, res, next) {
 
 exports.pickProduct = async function (req, res, next) {
     const receiverId = req.params.id;
-    const receiverInfo = req.query;
+    // const receiverInfo = req.query;
+    const receiverInfo = req.body;
+    const likes = receiverInfo.likes;
+    const dislikes = receiverInfo.dislikes;
     try {
         const receiver = await Receiver.findOne({
             where: { id: receiverId },
@@ -36,8 +37,22 @@ exports.pickProduct = async function (req, res, next) {
         });
         const product = await Product.findOne({
             where: { code: receiverInfo.product_id }
-        })
-        const result = await product.addOrder(receiver.Order);
+        });
+        await product.addOrder(receiver.Order);
+
+        for (let idx = 0; idx < likes.length; ++idx) {
+            const tmpProduct = await Product.findByPk(likes[idx]);
+            await receiver.addProduct(tmpProduct, {
+                through: { value: true, }
+            });
+        }
+        for (let idx = 0; idx < dislikes.length; ++idx) {
+            const tmpProduct = await Product.findByPk(dislikes[idx]);
+            await receiver.addProduct(tmpProduct, {
+                through: { value: false, }
+            });
+        }
+
         const ret = setResponseForm(true, "", "수신자 선물 선택 완료");
         res.json(ret);
     } catch (err) {
@@ -62,17 +77,16 @@ exports.getProductsChoiceList = async function (req, res, next) {
                 price_id: order.price_id,
             }
         })
-        console.log(products);
         let productDetails = [];
         products.forEach((product) => {
            productDetails.push(getProductDetailForm(product));
-        })
+        });
 
         const data = {
             giver_name: order.giverName,
             giver_phone: order.giverPhone,
             product: productDetails,
-        }
+        };
         const msg = '해당 수신자 데이터 전달 완료';
         const ret = setResponseForm(true, data, msg);
         res.json(ret);

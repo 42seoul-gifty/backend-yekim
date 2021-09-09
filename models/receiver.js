@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
             Receiver.belongsTo(models.Order, {
                 foreignKey: 'order_id',
             });
+            Receiver.belongsToMany(models.Product, {
+                through: 'Like',
+                foreignKey: 'receiver_id',
+            });
         }
     };
     Receiver.init({

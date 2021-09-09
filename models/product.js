@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
             Product.hasMany(models.Order, {
                 foreignKey: 'product_id',
             });
+            Product.belongsToMany(models.Receiver, {
+                through: 'Like',
+                foreignKey: 'product_id',
+            });
         }
     };
     Product.init({
