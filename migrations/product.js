@@ -9,17 +9,28 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             name: {
-                type: Sequelize.STRING
+                type: DataTypes.STRING,
+                notNull: true
             },
             thumbnail: {
-                type: Sequelize.STRING
+                type: DataTypes.STRING,
+            },
+            description: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            detail: {
+                type: DataTypes.STRING,
+                allowNull: true
             },
             price: {
-                type: Sequelize.INTEGER
+                type: DataTypes.INTEGER,
+                notNull: true
             },
             gender: {
-                type: Sequelize.STRING
-            }
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
         });
     },
     down: async (queryInterface, Sequelize) => {
