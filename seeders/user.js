@@ -3,17 +3,23 @@
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        let userSeed = [];
         const emailForm = '@student.42seoul.kr';
-        const userNames = ['yekim', 'yelee', 'yekang', 'yepark', 'yelim'];
-        for (let i = 0; i < 5; ++i) {
-            let tmpUser = {
-                id: i + 1,
-                name: userNames[i],
-                email: userNames[i] + emailForm,
-            }
-            userSeed.push(tmpUser);
-        }
+        const userSeed = [{
+            id: 1,
+            name: 'yekim',
+            email: 'yekim' + emailForm,
+            loginType: 1,
+        }, {
+            id: 2,
+            name: 'yelee',
+            email: 'yelee' + emailForm,
+            loginType: 1,
+        }, {
+            id: 3,
+            name: 'yekang',
+            email: 'yekang' + emailForm,
+            loginType: 1,
+        }];
         await queryInterface.bulkInsert('users', userSeed, {});
     },
 

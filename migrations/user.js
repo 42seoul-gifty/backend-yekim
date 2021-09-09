@@ -14,6 +14,13 @@ module.exports = {
             email: {
                 type: Sequelize.STRING
             },
+            phone: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            loginType: {
+                type: DataTypes.INTEGER,
+            },
         });
     },
     down: async (queryInterface, Sequelize) => {

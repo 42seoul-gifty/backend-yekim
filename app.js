@@ -10,7 +10,7 @@ dotenv.config();
 
 const { sequelize } = require('./models');
 // 절대로 force를 true로 하지 마세요!
-sequelize.sync({ force: false })
+sequelize.sync({ force: true })
     .then(() => {
         console.log('데이터베이스 연결에 성공했습니다.');
     })
