@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
             Product.hasMany(models.Order, {
                 foreignKey: 'product_id',
             });
+            Product.hasMany(models.Image, {
+                foreignKey: 'product_id',
+            });
             Product.belongsToMany(models.Receiver, {
                 through: 'Like',
                 foreignKey: 'product_id',
@@ -16,12 +19,15 @@ module.exports = (sequelize, DataTypes) => {
         }
     };
     Product.init({
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
         code: {
             type: DataTypes.INTEGER,
             notNull: true,
             uniqueKey: true,
-            // autoIncrement: true,
-            // primaryKey: true
         },
         name: {
             type: DataTypes.STRING,

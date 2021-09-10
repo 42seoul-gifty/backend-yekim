@@ -3,7 +3,7 @@
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        let categorySeed = [{
+        let brandSeed = [{
             id: 1,
             name: '건강맨',
         }, {
@@ -16,7 +16,7 @@ module.exports = {
             id: 4,
             name: '올영세일',
         }];
-        await queryInterface.bulkInsert('brands', categorySeed, {});
+        await queryInterface.bulkInsert('brands', brandSeed, {});
     },
 
     down: async (queryInterface, Sequelize) => {
