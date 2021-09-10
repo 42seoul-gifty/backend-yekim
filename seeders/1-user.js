@@ -1,4 +1,4 @@
-// seeders/타임스탬프-user.js 파일
+// seeders/타임스탬프-1-user.js 파일
 'use strict';
 
 module.exports = {

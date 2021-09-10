@@ -55,7 +55,6 @@ exports.getTokens = async function(req, res, next) {
         console.log("[DEBUG] 클라이언트로부터 받은 인가코드: ", authCode);
         const userInfo = await getUserInfoFromKakao(authCode);
         const { kakao_account } = userInfo.data;
-        // TODO: 카카오로부터 핸드폰 번호 받는 방법 확인하기
         const userFromDB = getUserInfoFromDB(kakao_account);
         const { accessToken, refreshToken } = await signToken(userFromDB, true);
         // token 수령 확인
