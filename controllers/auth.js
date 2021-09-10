@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { User } = require('../models');
+const getUserDetailForm = require('../libs/getUserDetailForm');
 const setResponseForm = require('../libs/setResponseForm');
 const signToken = require('../libs/signToken');
 
@@ -33,9 +34,9 @@ async function getUserInfoFromDB(accountInfo) {
         const [ userFromDB, created ] = await User.findOrCreate({
             where: {
                 name: accountInfo.profile.nickname,
-                email: accountInfo.email
+                email: accountInfo.email,
+                loginType: 1,
             },
-            defaults: { phone: '01050175933' },
         });
         const userName = userFromDB.dataValues.name;
         if (created) {
@@ -51,30 +52,46 @@ async function getUserInfoFromDB(accountInfo) {
 
 exports.getTokens = async function(req, res, next) {
     try {
-        const authCode = req.headers.authorization;
+        const authCode = req.headers['authorization-code'];
         console.log("[DEBUG] 클라이언트로부터 받은 인가코드: ", authCode);
         const userInfo = await getUserInfoFromKakao(authCode);
         const { kakao_account } = userInfo.data;
-        const userFromDB = getUserInfoFromDB(kakao_account);
+        const userFromDB = await getUserInfoFromDB(kakao_account);
         const { accessToken, refreshToken } = await signToken(userFromDB, true);
-        // token 수령 확인
+        // User 모델에 token 추가
+        userFromDB.token = refreshToken;
+        await userFromDB.save({ fields: [ 'token' ] });
+        const userDetail = await getUserDetailForm(userFromDB);
+
         const data = {
             access_token: accessToken,
             refresh_token: refreshToken,
+            user: userDetail,
         }
-        const ret = setResponseForm(true, data, 'jwt 토큰이 발급되었습니다.');
+        const msg = '서버로부터 jwt 토큰이 발급되었습니다.';
+        const ret = setResponseForm(true, data, msg);
         res.json(ret);
     } catch (err) {
-        console.error('jwt token 설정 오류:', err.data);
-        next(err);
+        console.error('jwt token 설정 오류 [kakao로부터 받은 auth code 만료]:', err.data);
+        const msg = 'kakao auth code가 만료되었습니다.';
+        const ret = setResponseForm(true, "", msg);
+        res.json(ret);
     }
 }
 
-// TODO: [front-end] 협의 후에, 쿠키로 저장하게 되면 쿠키에 있는 jwt 파기 / DB에 저장한다면 DB jwt 파기
-exports.unsetJwt = function (req, res, next) {
-    req.session.token = "";
-    req.session.destroy(function(err) {
-        console.error(err);
-    });
-    res.redirect('/');
+exports.removeToken = async function (req, res, next) {
+    try {
+        const user = await User.findOne({
+            where: { token: req.headers['refresh_token'] },
+        })
+        user.token = "";
+        await user.save({ fields: [ 'token' ] });
+
+        const msg = '로그아웃 처리 되었습니다.';
+        const ret = setResponseForm(true, "", msg);
+        res.json(ret);
+    } catch (err) {
+        console.error('로그아웃 오류', err);
+        next(err);
+    }
 }

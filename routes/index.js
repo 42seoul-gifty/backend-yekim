@@ -15,8 +15,8 @@ router.get('/profile', verifyToken, (req, res, next) => {
 });
 
 const authController = require('../controllers/auth');
-router.get('/login', authController.getTokens);
-router.post('/logout', authController.unsetJwt);
+router.get('/login/kakao', authController.getTokens);
+router.post('/logout', authController.removeToken);
 
 const userRouter = require('../routes/user');
 router.use('/users', userRouter);

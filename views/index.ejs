@@ -31,9 +31,16 @@
     <div class="input-group">
         <input id="refresh_token" type="text" class="form-control" aria-describedby="basic-addon1">
     </div>
+    <div>
         <button id="register" type="button" class="btn btn-primary" onclick="setTokensOnHeaders()" style="width: 200px; height:50px; margin: 0 40%;">
             토큰전달
         </button>
+    </div>
+    <div>
+        <button id="register" type="button" class="btn btn-primary" onclick="logout()" style="width: 200px; height:50px; margin: 0 40%;">
+            로그아웃
+        </button>
+    </div>
     <a href="/" style="width: 200px; height:50px; margin: 0 40%;">
         홈으로
     </a>
@@ -48,9 +55,9 @@
     function getTokensFromServer() {
         const authCode = document.getElementById('auth_code').value;
         console.log("authCode:", authCode);
-        axios.get('http://localhost:4242/login', {
+        axios.get('http://localhost:4242/login/kakao', {
             headers: {
-                'Authorization': authCode
+                'Authorization-Code': authCode
             }
         })
             .then(function(response){
@@ -68,8 +75,27 @@
         const refreshToken = document.getElementById('refresh_token').value;
         axios.get('http://localhost:4242/profile', {
             headers: {
-                'AccessToken': accessToken,
-                'RefreshToken': refreshToken,
+                'access-token': accessToken,
+                'refresh-token': refreshToken,
+            }
+        })
+            .then(function(response){
+                console.log(response.data);
+            })
+            .catch(function(error){
+                console.log(error);
+            })
+    }
+
+    function logout() {
+        const accessToken = document.getElementById('access_token').value;
+        const refreshToken = document.getElementById('refresh_token').value;
+        axios.post('http://localhost:4242/logout', {
+            "refresh_token": refreshToken,
+        },{
+            headers: {
+                'access_token': accessToken,
+                "refresh_token": refreshToken,
             }
         })
             .then(function(response){
