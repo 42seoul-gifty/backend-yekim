@@ -52,10 +52,11 @@
 <!--    </form>-->
 </body>
 <script>
+    const hostAddr = 'http://localhost:4242'
     function getTokensFromServer() {
         const authCode = document.getElementById('auth_code').value;
         console.log("authCode:", authCode);
-        axios.get('http://localhost:4242/login/kakao', {
+        axios.get(`${hostAddr}/login/kakao`, {
             headers: {
                 'Authorization-Code': authCode
             }
@@ -73,7 +74,7 @@
     function setTokensOnHeaders() {
         const accessToken = document.getElementById('access_token').value;
         const refreshToken = document.getElementById('refresh_token').value;
-        axios.get('http://localhost:4242/profile', {
+        axios.get(`${hostAddr}/profile`, {
             headers: {
                 'access-token': accessToken,
                 'refresh-token': refreshToken,
@@ -90,7 +91,7 @@
     function logout() {
         const accessToken = document.getElementById('access_token').value;
         const refreshToken = document.getElementById('refresh_token').value;
-        axios.post('http://localhost:4242/logout', {
+        axios.post(`${hostAddr}/logout`, {
             "refresh_token": refreshToken,
         },{
             headers: {

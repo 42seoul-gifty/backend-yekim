@@ -9,26 +9,26 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             name: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 notNull: true
             },
             thumbnail: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
             },
             description: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: true
             },
             detail: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: true
             },
             price: {
-                type: DataTypes.INTEGER,
+                type: Sequelize.INTEGER,
                 notNull: true
             },
             gender: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: false,
             },
         });

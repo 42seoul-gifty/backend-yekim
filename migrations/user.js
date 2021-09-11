@@ -15,11 +15,11 @@ module.exports = {
                 type: Sequelize.STRING
             },
             phone: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: true,
             },
             loginType: {
-                type: DataTypes.INTEGER,
+                type: Sequelize.INTEGER,
             },
         });
     },

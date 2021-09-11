@@ -42,7 +42,10 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         sequelize,
+        charset: 'utf8',
+        collate: 'utf8_unicode_ci',
         modelName: 'Receiver',
+        tableName: 'receivers',
         timestamps: false,
     });
     return Receiver;

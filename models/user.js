@@ -40,6 +40,8 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         sequelize,
+        charset: 'utf8',
+        collate: 'utf8_unicode_ci',
         modelName: 'User',
         tableName: 'users',
         timestamps: false,

@@ -24,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         sequelize,
+        charset: 'utf8',
+        collate: 'utf8_unicode_ci',
         modelName: 'Category',
         tableName: 'categories',
         timestamps: false,
