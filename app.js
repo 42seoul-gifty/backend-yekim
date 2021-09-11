@@ -46,7 +46,7 @@ app.use('/admin', adminRouter);
 
 app.use(function(err, req, res, next){
     console.error(err.stack);
-    res.status(500).send('Something is wrong!');
+    res.status(500).json('Something is wrong!');
 })
 
 app.listen(app.get('port'), () => {
