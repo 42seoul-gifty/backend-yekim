@@ -2,9 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-    res.render('admin/index', { title: 'Admin Index Page' });
-});
+const indexController = require('../../controllers/admin/index');
+router.get('/', indexController.renderIndexPage);
+
+const authRouter = require('../../routes/admin/auth');
+router.use('/auth', authRouter);
 
 const productRouter = require('./product');
 router.use('/product', productRouter);
