@@ -53,3 +53,22 @@ seeder 생성을 위해 설정합니다. (현재, development 부분만 구현�
   "production": ...
 }
 ```
+
+## 구동 방법
+1. Sequelize와 연동을 위해 DB 프로그램을 구동시킵니다. (mysql 예시) 
+    ``` bash
+    $ mysqld_safe&
+    ```
+2. app을 위해 사용된 모듈들을 설치합니다. (node_modules 생성)
+    ``` bash
+    $ npm i
+    ```
+3. app을 구동시킵니다. (seed 데이터 생성시 `npm run-script resetData`)
+    ``` bash
+    $ npm start
+    ```
+[참고]
+- aws 사용시 서버 포트 포워딩 (localhost:8080 -> domain:80)
+  ``` bash
+  $ sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+  ```
