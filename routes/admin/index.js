@@ -5,10 +5,15 @@ const router = express.Router();
 const indexController = require('../../controllers/admin/index');
 router.get('/', indexController.renderIndexPage);
 
-const authRouter = require('../../routes/admin/auth');
+const authRouter = require('./auth');
 router.use('/auth', authRouter);
+
+const { isLoggedIn } = require('./middleware');
+const userRouter = require('./user');
+router.use('/user', isLoggedIn, userRouter);
 
 const productRouter = require('./product');
 router.use('/product', productRouter);
+
 
 module.exports = router;

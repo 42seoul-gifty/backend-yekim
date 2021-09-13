@@ -1,7 +1,6 @@
 process.env.NODE_ENV = ( process.env.NODE_ENV && ( process.env.NODE_ENV ).trim().toLowerCase() == 'production' ) ? 'production' : 'development';
 const express = require('express');
 const session = require('express-session');
-const FileStore = require('session-file-store')(session);
 const dotenv = require('dotenv');
 const logger = require('morgan');
 const path = require('path');
@@ -31,19 +30,41 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 // TODO: Front-end 파트와 상의후 옵션 변경
+// const corsOptions = {
+//     origin: 'http://localhost:4242',
+//     credentials: true,
+// }
+// app.use(cors(corsOptions));
 app.use(cors());
 
 // session 관련 부분 설정부 입니다. ========================
+// app.use(session({
+//     secret: 'MY_SECRET',
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: {
+//         httpOnly: true,
+//         secure: false,
+//     },
+// }));
+const MySQLStore = require('express-mysql-session')(session);
+const sessionOptions = {
+    host: 'localhost',
+    port: 3306,
+    user: 'yekim',
+    password: '5933',
+    database: 'gifty'
+}
+
+const sessionStore = new MySQLStore(sessionOptions);
+
 app.use(session({
-    secret: 'MY_SECRET',
+    secret: 'SESSION_SECRET',
     resave: false,
     saveUninitialized: true,
-    cookie: {
-        httpOnly: true,
-        secure: false,
-    },
-    store:new FileStore(),
+    store: sessionStore,
 }));
+
 // ====================================================
 // passport 관련 부분 설정부 입니다. ========================
 const passport = require('passport');

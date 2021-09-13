@@ -140,12 +140,16 @@
         filterValue.price = document.getElementById('price').value
         filterValue.category = document.getElementById('category').value
         try {
-            const axiosResult = await axios.post('http://localhost:4242/admin/product/manage', {
-                gender: filterValue.gender,
-                age: filterValue.age,
-                price: filterValue.price,
-                category: filterValue.category,
-            })
+            const axiosResult = await axios({
+                method: 'post',
+                url: 'http://localhost:4242/admin/product/manage',
+                data: {
+                    gender: filterValue.gender,
+                    age: filterValue.age,
+                    price: filterValue.price,
+                    category: filterValue.category,
+                }
+            });
             return (axiosResult.data);
         } catch (err) {
             console.err("필터값 전달 오류:", err);

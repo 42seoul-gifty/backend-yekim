@@ -5,6 +5,7 @@ exports.renderLoginPage = function (req, res, next) {
 }
 
 exports.saveDataInSession = function (req, res, next) {
+    console.log("session 저장");
     req.session.isLoggedIn = true;
     req.session.save(function() {
         console.log('session save...');
