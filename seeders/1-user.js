@@ -9,16 +9,22 @@ module.exports = {
             name: 'yekim',
             email: 'yekim' + emailForm,
             loginType: 1,
+            createdAt: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+            updatedAt: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
         }, {
             id: 2,
             name: 'yelee',
             email: 'yelee' + emailForm,
             loginType: 1,
+            createdAt: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+            updatedAt: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
         }, {
             id: 3,
             name: 'yekang',
             email: 'yekang' + emailForm,
             loginType: 1,
+            createdAt: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+            updatedAt: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
         }];
         await queryInterface.bulkInsert('users', userSeed, {});
     },

@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
         collate: 'utf8_unicode_ci',
         modelName: 'User',
         tableName: 'users',
-        timestamps: false,
+        timestamps: true,
     });
     return User;
 };

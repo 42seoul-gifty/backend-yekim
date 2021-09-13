@@ -50,47 +50,55 @@
     </div>
 </div>
 <script>
-    function cb() {
-        const ret = axios.get('/admin/user/manage', {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(function (res) {
-                console.log(res);
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
-        return (ret);
+    async function cb() {
     }
 
     (function ($) {
-        $(function() {
-            cb();
+        $(async function() {
+            const users = await getUserDataFromServer();
+            const usersData = users.data;
+            $('#user_list').empty();
+            $.each(usersData, function (index, item) {
+                const tmpUserRow = makeUserRow(item);
+                $('#user_list').append(tmpUserRow);
+            })
         });
     })(jQuery);
 
-    // function getUserDataFromServer() {
-    //     try {
-    //         console.log("getUserDataFromServer=================");
-    //         const axiosResult = axios({
-    //             url: `/admin/user/manage`,
-    //             method: 'post',
-    //         },  {
-    //             headers:{
-    //                 'Content-Type': 'application/json; charset=utf-8'
-    //             }
-    //         }).then(res => {
-    //             console.log(res);
-    //         });
-    //         // return (axiosResult.data);
-    //     } catch (err) {
-    //         console.log("유저 데이터 조회 오류:", err);
-    //     }
-    // }
-    //
-    // getUserDataFromServer();
+    async function getUserDataFromServer() {
+        try {
+            const ret = await axios.get('/admin/user/manage', {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            return ret;
+        } catch (err) {
+            console.log("유저 데이터 조회 오류:", err);
+            return undefined;
+        }
+    }
+
+    function makeUserRow(user) {
+        const modifiedCreatedAt = user.createdAt.split('T')[0].replace(/-/g,'.');
+        const orders = user.Order;
+        const orderCount = orders.length;
+        let totalPurchaseAmount = 0;
+        orders.forEach((order) => {
+            totalPurchaseAmount += order.purchaseAmount;
+        });
+        console.log(orders);
+        let userRow = '<tr>';
+        userRow += `<td scope="col"><p>${user.id}</p></td>`;
+        userRow += `<td scope="col"><p>${user.name}</p></td>`;
+        userRow += `<td scope="col"><p>${modifiedCreatedAt}</p></td>`;
+        userRow += `<td scope="col"><p>${orderCount}</p></td>`;
+        userRow += `<td scope="col"><p>${totalPurchaseAmount}</p></td>`;
+        userRow += `<td scope="col"><button type="button" class="btn btn-light"><p>삭제</button></p></td>`;
+        userRow += '</tr>'
+        return userRow;
+    }
+
 
 
     // (function($) {
