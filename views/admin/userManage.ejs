@@ -15,7 +15,6 @@
 </head>
 <body>
 <div class="container">
-    <button type="button" class="btn btn-primary">filter</button>
     <div class="row">
         <div class="col-3">
             <%- include ('nav') -%>
@@ -52,7 +51,11 @@
 <script>
     (function ($) {
         $(async function() {
-            const sortFlags = { purchaseCount: 0 };
+            const sortFlags = {
+                purchaseCount: 0,
+                joinDate: 0,
+                purchaseAmount: 0,
+            };
             function showUsers() {
                 $('#user_list').empty();
                 $.each(users, function (index, item) {
@@ -66,34 +69,46 @@
             showUsers(users);
 
             $("#join_date").click(function() {
-                console.log("join_date pushed");
-                // $.each(users, function (index, item) {
-                //     const tmpUserRow = makeUserRow(item);
-                //     $('#user_list').append(tmpUserRow);
-                // })
+                ++sortFlags.joinDate;
+                const sign = sortFlags.joinDate % 2 ? 1 : -1;
+                const sortedUsers = users.sort(function(user1, user2) {
+                    const time1 = new Date(user1.createdAt).getTime();
+                    const time2 = new Date(user2.createdAt).getTime();
+                    return sign * (time1 - time2);
+                });
+                console.log(sortedUsers);
+                $('#user_list').empty();
+                showUsers(sortedUsers);
             });
             $("#purchase_count").click(async function() {
                 ++sortFlags.purchaseCount;
                 const sign = sortFlags.purchaseCount % 2 ? 1 : -1;
-                users = users.sort(function(user1, user2) {
+                const sortedUsers = users.sort(function(user1, user2) {
                     return sign * (user1.purchaseCount - user2.purchaseCount);
                 });
                 $('#user_list').empty();
-                showUsers(users);
+                showUsers(sortedUsers);
+            });
+            $("#purchase_amount").click(async function() {
+                ++sortFlags.purchaseAmount;
+                const sign = sortFlags.purchaseAmount % 2 ? 1 : -1;
+                const sortedUsers = users.sort(function(user1, user2) {
+                    return sign * (user1.totalPurchaseAmount - user2.totalPurchaseAmount);
+                });
+                $('#user_list').empty();
+                showUsers(sortedUsers);
             });
         });
     })(jQuery);
 
     function setUsersInformation(users) {
         users.forEach((user) => {
-            const joinDate = user.createdAt.split('T')[0].replace(/-/g,'.');
             const orders = user.Order;
             let totalPurchaseAmount = 0;
             orders.forEach((order) => {
                 totalPurchaseAmount += order.purchaseAmount;
             });
 
-            user.joinDate = joinDate;
             user.purchaseCount = orders.length;
             user.totalPurchaseAmount = totalPurchaseAmount;
         }, users)
@@ -115,22 +130,17 @@
     }
 
     function makeUserRow(user) {
+        const joinDateForDisplay = user.createdAt.split('T')[0].replace(/-/g,'.');
         let userRow = '<tr>';
         userRow += `<td scope="col"><p>${user.id}</p></td>`;
         userRow += `<td scope="col"><p>${user.name}</p></td>`;
-        userRow += `<td scope="col"><p>${user.joinDate}</p></td>`;
+        userRow += `<td scope="col"><p>${joinDateForDisplay}</p></td>`;
         userRow += `<td scope="col"><p>${user.purchaseCount}</p></td>`;
         userRow += `<td scope="col"><p>${user.totalPurchaseAmount}</p></td>`;
         userRow += `<td scope="col"><button type="button" class="btn btn-light"><p>삭제</button></p></td>`;
         userRow += '</tr>'
         return userRow;
     }
-
-    function sortUsers(users) {
-
-    }
-
-
 
     // (function($) {
     //     $(function() {
