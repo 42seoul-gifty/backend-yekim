@@ -1,4 +1,28 @@
-const { Product, Age, Price, Category, Brand } = require("../../models/");
+const { Product, Age, Price, Category, Brand, Like, Order } = require("../../models/");
+
+// TODO: image, viewCount, orderCount 추가
+async function setProductInfo(product) {
+    const productData = product.dataValues;
+    const likeCount = await Like.findAndCountAll({
+        where: { product_id: productData.id, value: 1 }
+    });
+    const orderCount = await Order.findAndCountAll({
+        where: { product_id: productData.id }
+    });
+    const ret = {
+        code: productData.code,
+        name: productData.name,
+        brand: product.Brand.name,
+        thumbnail: productData.thumbnail,
+        description: productData.description,
+        detail: productData.detail,
+        category: product.Category.type,
+        feeRate: product.feeRate,
+        likeCount: likeCount.count,
+        orderCount: orderCount.count,
+    };
+    return ret;
+}
 
 exports.renderProductManage = function (req, res, next) {
     res.render('admin/productManage');
@@ -25,9 +49,32 @@ exports.getFilteredProducts = async function (req, res, next) {
             where: filter,
             include: [Age, Price, Category, Brand],
         });
-        res.json(products);
+
+        const productsForPage = [];
+        for (let idx = 0; idx < products.length; ++idx) {
+            const tmpProductData = await setProductInfo(products[idx]);
+            productsForPage.push(tmpProductData);
+        }
+        res.json(productsForPage);
     } catch (err) {
         console.error('필터된 상품 조회 오류:', err);
+        next(err);
+    }
+}
+
+exports.getProductDetailById = async function (req, res, next) {
+    const productId = req.params.id;
+    try {
+        const product = await Product.findByPk(productId, {
+            include: [Age, Price, Category, Brand]
+        });
+
+        const productForPage = await setProductInfo(product);
+        res.render('admin/productDetail', {
+            product: productForPage,
+        });
+    } catch (err) {
+        console.error('상품 상세 조회 오류:', err);
         next(err);
     }
 }

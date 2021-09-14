@@ -8,6 +8,7 @@ const uploadImage = require('../../libs/uploadImage')
 
 router.get('/manage', productController.renderProductManage);
 router.post('/filter', productController.getFilteredProducts);
+router.get('/detail/:id', productController.getProductDetailById);
 router.get('/register', productController.renderProductRegister);
 router.post('/register', uploadImage.single('thumbnail'), productController.registerProduct);
 

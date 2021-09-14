@@ -56,7 +56,15 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true
         },
+        link: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         price: {
+            type: DataTypes.INTEGER,
+            notNull: true
+        },
+        feeRate: {
             type: DataTypes.INTEGER,
             notNull: true
         },
