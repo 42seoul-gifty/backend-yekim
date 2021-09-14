@@ -5,13 +5,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!--    <link href="/stylesheets/fSelect.css" rel="stylesheet">-->
-
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>-->
-<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css" />-->
-
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
-<!--    <script src="/javascripts/fSelect.js"></script>-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>-->
+    <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>-->
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
     <style>
 
     </style>
@@ -104,45 +103,92 @@
 
 <script>
     (function ($) {
-        $(".btn, .btn-primary").css({ marginLeft: "5px", height: "40px" })
-            .click(async function() {
-                // 클릭 -> 필터값 서버로
-                const productData = await getDataAboutFilter();
-                // console.log(productData[0]);
+        $(async function() {
+            let filter = {
+                gender: '전체',
+                age_id: '전체',
+                price_id: '전체',
+                category_id: '전체'
+            }
+
+            function showProducts(products) {
                 $('#product_list').empty();
-                $.each(productData, function (index, item) {
+                $.each(products, function (index, item) {
                     const productRow = makeProductRow(item);
                     $('#product_list').append(productRow);
                 })
-            });
+            }
 
-        function makeProductRow(product) {
-            console.log("product in makeProductTable:", product);
-            let productRow = '<tr>';
-                productRow += `<td scope="col"><p>${product.code}</p></td>`;
-                productRow += `<td scope="col"><p>${product.name}</p></td>`;
-                productRow += `<td scope="col"><p>${product.category}</p></td>`;
-                productRow += `<td scope="col"><p>${product.thumbnail}</p></td>`;
-                productRow += `<td scope="col"><p>${product.brand}</p></td>`;
-                productRow += `<td scope="col"><p>${product.views}</p></td>`;
-                productRow += `<td scope="col"><p>${product.likes}</p></td>`;
-                productRow += `<td scope="col"><p>${product.orders}</p></td>`;
-                productRow += `<td scope="col"><button type="button" class="btn btn-light"><p>삭제</button></p></td>`;
-                productRow += '</tr>'
-            return productRow;
-        }
+            let products = await getProductsFromServer(filter);
+            products = setProductsInformation(products.data);
+            showProducts(products);
+
+            $(".btn, .btn-primary").css({ marginLeft: "5px", height: "40px" })
+                .click(async function() {
+                    const filter = {
+                        gender: document.getElementById('gender').value,
+                        age_id: ageRangeToId(document.getElementById('age').value),
+                        price_id: priceRangeToId(document.getElementById('price').value),
+                        category_id: categoryToId(document.getElementById('category').value),
+                    };
+                    console.log(filter);
+                    // 클릭 -> 필터값 서버로
+                    let products = await getProductsFromServer(filter);
+                    products = setProductsInformation(products.data);
+                    showProducts(products);
+                });
+        })
     })(jQuery);
 
+    // TODO: 노출수 등 계산하여 추가하기
+    function setProductsInformation(products) {
+        return products;
+    }
+
+    async function getProductsFromServer(filter) {
+        try {
+            const ret = await axios.post('/admin/product/filter', {
+                filter: filter
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(ret);
+            return ret;
+        } catch (err) {
+            console.log("상품 데이터 조회 오류:", err);
+            return undefined;
+        }
+    }
+
+    function makeProductRow(product) {
+        console.log("product in makeProductTable:", product);
+        let productRow = '<tr>';
+        productRow += `<td scope="col"><p>${product.code}</p></td>`;
+        productRow += `<td scope="col"><p>${product.name}</p></td>`;
+        productRow += `<td scope="col"><p>${product.Category.type}</p></td>`;
+        productRow += `<td scope="col"><p>${product.thumbnail}</p></td>`;
+        productRow += `<td scope="col"><p>${product.description}</p></td>`;
+        productRow += `<td scope="col"><p>${product.Brand.name}</p></td>`;
+        productRow += `<td scope="col"><p>${product.views}</p></td>`;
+        productRow += `<td scope="col"><p>${product.likes}</p></td>`;
+        productRow += `<td scope="col"><button type="button" class="btn btn-light"><p>삭제</button></p></td>`;
+        productRow += '</tr>'
+        return productRow;
+    }
+
     async function getDataAboutFilter() {
-        let filterValue = {};
-        filterValue.gender = document.getElementById('gender').value
-        filterValue.age = document.getElementById('age').value
-        filterValue.price = document.getElementById('price').value
-        filterValue.category = document.getElementById('category').value
+        let filterValue = {
+            gender: document.getElementById('gender').value,
+            age: ageRangeToId(document.getElementById('age').value),
+            price: priceRangeToId(document.getElementById('price').value),
+            category: categoryToId(document.getElementById('category').value),
+        };
         try {
             const axiosResult = await axios({
                 method: 'post',
-                url: 'http://localhost:4242/admin/product/manage',
+                url: 'http://localhost:4242/admin/product/filter',
                 data: {
                     gender: filterValue.gender,
                     age: filterValue.age,
@@ -157,6 +203,45 @@
         console.log('제출 완료');
     }
 
+    function ageRangeToId(range) {
+        if (range === '전체')
+            return '전체';
+        let startAge = 20;
+        const ageRange = [];
+        for (let idx = 0; idx < 6; ++idx) {
+            if (idx === 5) {
+                ageRange.push(`${startAge + idx * 5}세이상`);
+            } else {
+                ageRange.push(`${startAge + idx * 5}~${startAge + idx * 5 + 4}세`);
+            }
+        }
+        return (ageRange.indexOf(range) + 1);
+    }
+
+    function priceRangeToId(range) {
+        if (range === '전체')
+            return '전체';
+        let startPrice = 15000;
+        const priceRange = [];
+        for (let idx = 0; idx < 8; ++idx) {
+            const tmpPrice = startPrice + idx * 5000;
+            if (tmpPrice % 10000 == 0) {
+                priceRange.push(`${tmpPrice / 10000}만원`);
+            } else {
+                priceRange.push(`${parseInt(tmpPrice / 10000)}만 ${parseInt((tmpPrice % 10000) / 1000)}천원`);
+            }
+        }
+        return (priceRange.indexOf(range) + 1);
+    }
+
+    function categoryToId(type) {
+        if (type === '전체')
+            return '전체';
+        const categoryArr = [
+            '화장품', '식품', '건강', '리빙', '패션잡화', '디지털'
+        ];
+        return (categoryArr.indexOf(type) + 1);
+    }
 
     // (function ($) {
     //     $(function () {

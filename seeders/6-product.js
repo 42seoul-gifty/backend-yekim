@@ -15,7 +15,7 @@ module.exports = {
             gender: '전체',
             age_id: 1,
             price_id: 1,
-            category_id: 1,
+            category_id: 3,
             brand_id: 1,
             price: 15000,
         }, {
@@ -28,7 +28,7 @@ module.exports = {
             gender: '전체',
             age_id: 2,
             price_id: 2,
-            category_id: 3,
+            category_id: 4,
             brand_id: 2,
             price: 20000,
         }, {
@@ -41,7 +41,7 @@ module.exports = {
             gender: '전체',
             age_id: 3,
             price_id: 5,
-            category_id: 3,
+            category_id: 6,
             brand_id: 3,
             price: 35000,
         }, {
@@ -54,7 +54,7 @@ module.exports = {
             gender: '전체',
             age_id: 1,
             price_id: 1,
-            category_id: 1,
+            category_id: 3,
             brand_id: 1,
             price: 15000,
         }, {
@@ -67,7 +67,7 @@ module.exports = {
             gender: '전체',
             age_id: 1,
             price_id: 1,
-            category_id: 1,
+            category_id: 3,
             brand_id: 1,
             price: 15000,
         }, {
@@ -77,10 +77,10 @@ module.exports = {
             description: '쉽게 지워집니다.',
             detail: '에탄올 함유',
             thumbnail: thumbnailDir + '매니큐어' + '.' + extName,
-            gender: '여',
+            gender: '여성',
             age_id: 1,
             price_id: 1,
-            category_id: 5,
+            category_id: 1,
             brand_id: 4,
             price: 15000,
         }];

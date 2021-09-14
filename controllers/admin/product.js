@@ -1,4 +1,4 @@
-const { Product } = require("../../models/");
+const { Product, Age, Price, Category, Brand } = require("../../models/");
 
 exports.renderProductManage = function (req, res, next) {
     res.render('admin/productManage');
@@ -12,18 +12,22 @@ exports.renderProductRegister = function (req, res, next) {
     });
 }
 
-exports.displayProduct = async function (req, res, next) {
-    const productFilterValue = req.body;
-    // TODO: 필터 카테고리 사용하여 데이터 가져오기
+// Order에서 관련 product 주문 수 카운트하기
+exports.getFilteredProducts = async function (req, res, next) {
+    const filter = req.body.filter;
+    const keys = Object.keys(filter);
+    for (let idx = 0; idx < keys.length; ++idx) {
+        if (filter[keys[idx]] === '전체')
+            delete filter[keys[idx]];
+    }
     try {
-        let productsToMakeList = [];
-        const products = await Product.findAll();
-        products.forEach(product => {
-            productsToMakeList.push(product.dataValues);
+        const products = await Product.findAll({
+            where: filter,
+            include: [Age, Price, Category, Brand],
         });
-        res.json(productsToMakeList);
+        res.json(products);
     } catch (err) {
-        console.error('[admin] 조건에 맞는 상품 조회 오류:', err);
+        console.error('필터된 상품 조회 오류:', err);
         next(err);
     }
 }

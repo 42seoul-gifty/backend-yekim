@@ -5,19 +5,22 @@ module.exports = {
     up: async (queryInterface, Sequelize) => {
         let categorySeed = [{
             id: 1,
-            type: '건강',
+            type: '화장품',
         }, {
             id: 2,
             type: '식품',
         }, {
             id: 3,
-            type: '가전',
+            type: '건강',
         }, {
             id: 4,
-            type: '악세서리',
+            type: '리빙',
         }, {
             id: 5,
-            type: '뷰티',
+            type: '패션잡화',
+        }, {
+            id: 6,
+            type: '디지털',
         }];
         await queryInterface.bulkInsert('categories', categorySeed, {});
     },

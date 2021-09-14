@@ -16,6 +16,18 @@ module.exports = (sequelize, DataTypes) => {
                 through: 'Like',
                 foreignKey: 'product_id',
             });
+            Product.belongsTo(models.Category, {
+                foreignKey: 'category_id',
+            });
+            Product.belongsTo(models.Age, {
+                foreignKey: 'age_id',
+            });
+            Product.belongsTo(models.Price, {
+                foreignKey: 'price_id',
+            });
+            Product.belongsTo(models.Brand, {
+                foreignKey: 'brand_id',
+            });
         }
     };
     Product.init({

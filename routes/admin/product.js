@@ -7,7 +7,7 @@ const productController = require('../../controllers/admin/product');
 const uploadImage = require('../../libs/uploadImage')
 
 router.get('/manage', productController.renderProductManage);
-router.post('/manage', productController.displayProduct);
+router.post('/filter', productController.getFilteredProducts);
 router.get('/register', productController.renderProductRegister);
 router.post('/register', uploadImage.single('thumbnail'), productController.registerProduct);
 
