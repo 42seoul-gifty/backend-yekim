@@ -5,7 +5,7 @@ exports.renderUserMange = async function (req, res, next) {
     res.render('admin/userManage');
 }
 
-exports.getUserData = async function (req, res, next) {
+exports.getUsers = async function (req, res, next) {
     try {
         const users = await User.findAll({
             include: [{

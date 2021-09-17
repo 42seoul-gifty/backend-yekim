@@ -3,7 +3,6 @@ const {Product, Age, Price, Category, Brand, Image, Like, Order} = require("../.
 // TODO: image, viewCount, orderCount 추가
 async function setProductInfo(product) {
     const productData = product.dataValues;
-    console.log(productData);
     const likeCount = await Like.findAndCountAll({
         where: {product_id: productData.id, value: 1}
     });
@@ -11,12 +10,24 @@ async function setProductInfo(product) {
         where: {product_id: productData.id}
     });
     const ageRange = productData.Age.range.split(',');
-    const priceRange = productData.Price.range;
+    const tmpPriceRange = productData.Price.range;
+    let priceRange;
+    if (tmpPriceRange % 10000 === 0) {
+        priceRange = `${tmpPriceRange /10000}만`;
+    } else {
+        priceRange = `${parseInt(tmpPriceRange /10000)}만 ${parseInt(tmpPriceRange % 10000 / 1000)}천`;
+    }
+    const images = [];
+    productData.Images.forEach(Image => {
+        images.push(Image.dataValues.url);
+    })
+
     const ret = {
         code: productData.code,
         name: productData.name,
         brand: product.Brand.name,
         thumbnail: productData.thumbnail,
+        images: images,
         description: productData.description,
         detail: productData.detail,
         category: product.Category.type,
@@ -34,18 +45,14 @@ async function setProductInfo(product) {
 
 exports.renderProductManage = function (req, res, next) {
     res.render('admin/productManage');
-    // res.render('admin/filterTest');
 }
 
 exports.renderProductRegister = function (req, res, next) {
-    // res.render('admin/imgUploadTest');
-    res.render('admin/productRegister', {
-        title: "This is Title"
-    });
+    res.render('admin/productRegister');
 }
 
 // Order에서 관련 product 주문 수 카운트하기
-exports.getFilteredProducts = async function (req, res, next) {
+exports.getProducts = async function (req, res, next) {
     const filter = req.body.filter;
     const keys = Object.keys(filter);
     for (let idx = 0; idx < keys.length; ++idx) {
@@ -55,7 +62,7 @@ exports.getFilteredProducts = async function (req, res, next) {
     try {
         const products = await Product.findAll({
             where: filter,
-            include: [Age, Price, Category, Brand],
+            include: [Age, Price, Category, Brand, Image],
         });
 
         const productsForPage = [];
@@ -70,13 +77,14 @@ exports.getFilteredProducts = async function (req, res, next) {
     }
 }
 
-exports.getProductDetailById = async function (req, res, next) {
-    const productId = req.params.id;
+exports.getProductDetail = async function (req, res, next) {
+    const productCode = req.query.product_code;
+    console.log('productCode:', productCode);
     try {
-        const product = await Product.findByPk(productId, {
-            include: [Age, Price, Category, Brand]
+        const product = await Product.findOne({
+            where: {code: productCode},
+            include: [Age, Price, Category, Brand, Image]
         });
-
         const productForPage = await setProductInfo(product);
         res.render('admin/productDetail', {
             product: productForPage,
@@ -129,7 +137,6 @@ function getBrandList(brands) {
     return brandList;
 }
 
-// TODO: category 및 age 등등 처리
 exports.registerProduct = async function (req, res, next) {
     const productInfo = req.body;
     const thumbnail = req.files.thumbnail[0];
@@ -192,15 +199,68 @@ exports.renderEditPage = async function (req, res, next) {
     try {
         const product = await Product.findOne({
             where: {code: productCode},
-            include: [Age, Price, Category, Brand],
+            include: [Age, Price, Category, Brand, Image],
         })
         const productForPage = await setProductInfo(product);
-        console.log(productForPage);
         res.render('admin/productEdit', {
             product: productForPage
         });
     } catch (err) {
         console.error('상품 수정 페이지 조회 오류:', err);
+        next(err);
+    }
+}
+
+// TODO: edit에서도 thumbnail, image에 대해서 파일처리
+exports.editProduct = async function (req, res, next) {
+    console.log(req.body);
+    const productInfo = req.body;
+
+    const imagesPathList = productInfo.images.split('\n');
+    try {
+        const product = await Product.findOne({
+            where: { code: parseInt(productInfo.code, 10) },
+            include: [Image],
+        });
+
+        product.name = productInfo.name;
+        product.thumbnail = productInfo.thumbnail;
+        product.price = productInfo.retail_price;
+        product.feeRate = productInfo.fee_rate;
+        product.link = productInfo.link;
+        product.description = productInfo.description;
+        product.detail = productInfo.detail;
+        product.gender = productInfo.gender;
+
+        const ages = await Age.findAll({raw: true});
+        const ageList = getAgeList(ages);
+        product.age_id = ageList.indexOf(productInfo.age);
+
+        const prices = await Price.findAll({raw: true});
+        const priceList = getPriceList(prices);
+        product.price_id = priceList.indexOf(productInfo.price);
+
+        const categories = await Category.findAll({raw: true});
+        const categoryList = getCategoryList(categories);
+        product.category_id = categoryList.indexOf(productInfo.category);
+
+        const brands = await Brand.findAll({raw: true});
+        const brandList = getBrandList(brands);
+        product.brand_id = brandList.indexOf(productInfo.brand);
+
+        await product.save({fields: ['age_id', 'brand_id', 'category_id', 'price_id']});
+
+        for (let idx = 0; idx < imagesPathList.length; ++idx) {
+            const tmpImage = await Image.create({
+                url: imagesPathList[idx],
+            });
+            await product.addImages(tmpImage);
+        }
+
+        console.log("수정된 모델 데이터: ", product);
+        res.json("Product Register complete");
+    } catch (err) {
+        console.error("[admin] 상품 저장 오류:", err);
         next(err);
     }
 }

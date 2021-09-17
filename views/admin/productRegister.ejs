@@ -58,7 +58,7 @@
             <input id="product_fee_rate"  type='number' class="form-control" aria-describedby="basic-addon1" placeholder=",를 떼고 숫자만 입력해주세요">
         </div>
         <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">링크</span>
+            <span class="input-group-text" id="basic-addon1">제품링크</span>
             <input id="product_link" type="text" class="form-control" aria-describedby="basic-addon1">
         </div>
         <div class="input-group mb-3">
@@ -71,7 +71,7 @@
         </div>
         <div class="input-group mb-3  register">
             <select id="product_gender" class="form-select multiple">
-                <option selected>성별</option>
+                <option selected>전체</option>
                 <option value="남성">남성</option>
                 <option value="여성">여성</option>
             </select>
@@ -137,8 +137,6 @@
                 alert("수수로율을 입력해주세요.");
             } else if ($('#product_link').val() === "") {
                 alert("링크를 입력해주세요.");
-            } else if ($('#product_gender').val() === "성별") {
-                alert("성별을 선택해주세요.");
             } else if ($('#product_age').val() === "연령대") {
                 alert("연령대를 선택해주세요.");
             } else if ($('#product_price').val() === "가격대") {
@@ -146,24 +144,24 @@
             }
 
             const formData = new FormData();
-            formData.append('category', document.getElementById('product_category').value);
-            formData.append('code', document.getElementById('product_code').value);
-            formData.append('name', document.getElementById('product_name').value);
+            formData.append('category', $('#product_category').val());
+            formData.append('code', $('#product_code').val());
+            formData.append('name', $('#product_name').val());
             formData.append('thumbnail', document.getElementById('product_thumbnail').files[0]);
             const images = document.getElementById('product_images').files;
             console.log(images);
             for (let i = 0; i < images.length; ++i) {
                 formData.append('images', images[i]);
             }
-            formData.append('brand', document.getElementById('product_brand').value);
-            formData.append('retail_price', document.getElementById('product_retail_price').value);
-            formData.append('fee_rate', document.getElementById('product_fee_rate').value);
-            formData.append('link', document.getElementById('product_link').value);
-            formData.append('description', document.getElementById('product_description').value);
-            formData.append('detail', document.getElementById('product_detail').value);
-            formData.append('gender', document.getElementById('product_gender').value);
-            formData.append('age', document.getElementById('product_age').value);
-            formData.append('price', document.getElementById('product_price').value);
+            formData.append('brand', $('#product_brand').val());
+            formData.append('retail_price', $('#product_retail_price').val());
+            formData.append('fee_rate', $('#product_fee_rate').val());
+            formData.append('link', $('#product_link').val());
+            formData.append('description', $('#product_description').val());
+            formData.append('detail', detail);
+            formData.append('gender', $('#product_gender').val());
+            formData.append('age', $('#product_age').val());
+            formData.append('price', $('#product_price').val());
 
             try {
                 await axios.post('http://localhost:4242/admin/product/register', formData, {
@@ -171,6 +169,7 @@
                         'Content-Type': 'multipart/form-data; charset=utf-8'
                     }
                 });
+                alert("새로운 상품이 등록되었습니다.");
             } catch (err) {
                 console.log("form data 전송 실패", err);
             }

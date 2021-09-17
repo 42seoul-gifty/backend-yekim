@@ -130,7 +130,6 @@
                         price_id: priceRangeToId(document.getElementById('price').value),
                         category_id: categoryToId(document.getElementById('category').value),
                     };
-                    console.log(filter);
                     let products = await getProductsFromServer(filter);
                     products = setProductsInformation(products.data);
                     showProducts(products);
@@ -161,13 +160,12 @@
     }
 
     function makeProductRow(product) {
-        console.log("product in makeProductTable:", product);
         let productRow = '<tr>';
         productRow += `<td scope="col"><p>${ product.code }</p></td>`;
         productRow += `<td scope="col" style="width:200px">
-                        <p onclick="window.open('/admin/product/detail/${ product.id }', '상품수정', 'width=900,height=1000,left=500,top=50')">
+                        <a onclick="window.open('/admin/product/detail?product_code=${product.code}', '상품수정', 'width=700,height=1000,left=500,top=50,status=no,menubar=no,toolbar=no,resizable=no')">
                         ${ product.name }
-                        </p></td>`;
+                        </a></td>`;
         productRow += `<td scope="col"><p>${ product.category }</p></td>`;
         productRow += `<td scope="col"><p><img src=${product.thumbnail } alt="thumbnail" width="150" height="150"></p></td>`;
         productRow += `<td scope="col"><p>${ product.description }</p></td>`;
