@@ -32,15 +32,16 @@
                     <%= element %><br>
                 <%  })
                 }%></td></tr>
-            <tr><th>소비자가격</th><td><%= product.price %></td></tr>
+            <tr><th>소비자가격</th><td><%= product.retailPrice %></td></tr>
             <tr><th>마진율</th><td><%= product.feeRate %></td></tr>
             <tr><th>노출수</th><td><%= product.viewCount %></td></tr>
             <tr><th>좋아요수</th><td><%= product.likeCount %></td></tr>
             <tr><th>주문수</th><td><%= product.orderCount %></td></tr>
-            <tr><th>성별</th><td>
-            <tr><th>연령대</th><td>
-            <tr><th>금액대</th><td>
+            <tr><th>성별</th><td><%= product.gender %></td></tr>
+            <tr><th>연령대</th><td><%= product.age %></td></tr>
+            <tr><th>금액대</th><td><%= product.price %></td></tr>
         </table>
+        <button style="margin: 5% 40%;" type="button" class="btn btn-primary" onclick="location.href='http://localhost:4242/admin/product/edit/?product_code=<%= product.code %>';">수정하기</button>
     </div>
 </div>
 <script>

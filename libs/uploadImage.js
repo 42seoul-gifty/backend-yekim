@@ -3,7 +3,11 @@ const multer = require('multer');
 const path = require("path");
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'tmp/uploads/')
+        if (file.fieldname === 'thumbnail') {
+            cb(null, 'tmp/uploads_example/thumbnails');
+        } else if (file.fieldname === 'images') {
+            cb(null, 'tmp/uploads_example/images');
+        }
     },
     filename: function (req, file, cb) {
         const mimeType = path.extname(file.originalname);

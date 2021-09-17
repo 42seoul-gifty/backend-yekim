@@ -66,7 +66,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         feeRate: {
             type: DataTypes.INTEGER,
-            notNull: true
+            notNull: false,
         },
         gender: {
             type: DataTypes.STRING,

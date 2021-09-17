@@ -227,7 +227,7 @@
         const priceRange = [];
         for (let idx = 0; idx < 8; ++idx) {
             const tmpPrice = startPrice + idx * 5000;
-            if (tmpPrice % 10000 == 0) {
+            if (tmpPrice % 10000 === 0) {
                 priceRange.push(`${tmpPrice / 10000}만원`);
             } else {
                 priceRange.push(`${parseInt(tmpPrice / 10000)}만 ${parseInt((tmpPrice % 10000) / 1000)}천원`);
