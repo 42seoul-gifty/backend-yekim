@@ -15,5 +15,7 @@ router.use('/user', isLoggedIn, userRouter);
 const productRouter = require('./product');
 router.use('/product', productRouter);
 
+const orderRouter = require('./order');
+router.use('/order', orderRouter);
 
 module.exports = router;

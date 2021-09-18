@@ -9,8 +9,11 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'order_id',
                 as: 'Receiver',
             });
-            Order.belongsTo(models.Product, {
-                foreignKey: 'product_id',
+            Order.belongsTo(models.Age, {
+                foreignKey: 'age_id',
+            });
+            Order.belongsTo(models.Price, {
+                foreignKey: 'price_id',
             });
         }
     };

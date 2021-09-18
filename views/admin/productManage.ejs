@@ -119,7 +119,7 @@
             }
 
             let products = await getProductsFromServer(filter);
-            products = setProductsInformation(products.data);
+            products = setProductsInfo(products.data);
             showProducts(products);
 
             $(".btn, .btn-primary").css({ marginLeft: "5px", height: "40px" })
@@ -131,14 +131,14 @@
                         category_id: categoryToId(document.getElementById('category').value),
                     };
                     let products = await getProductsFromServer(filter);
-                    products = setProductsInformation(products.data);
+                    products = setProductsInfo(products.data);
                     showProducts(products);
                 });
         })
     })(jQuery);
 
     // TODO: 노출수 등 계산하여 추가하기
-    function setProductsInformation(products) {
+    function setProductsInfo(products) {
         return products;
     }
 
@@ -151,7 +151,6 @@
                     'Content-Type': 'application/json'
                 }
             });
-            console.log(ret);
             return ret;
         } catch (err) {
             console.log("상품 데이터 조회 오류:", err);
@@ -243,192 +242,6 @@
         return (categoryArr.indexOf(type) + 1);
     }
 
-    // (function ($) {
-    //     $(function () {
-    //         // if (sessionStorage.getItem('login') !== 'true') {
-    //         //     alert("로그인이 필요한 서비스입니다.")
-    //         //     location.href = "https://gifty4u.com/admin"
-    //         // }
-    //         window.fs_test = $('#gender').fSelect({
-    //             placeholder: '성별',
-    //             numDisplayed: 2,
-    //             overflowText: '{n} selected',
-    //             noResultsText: 'No results found',
-    //             searchText: 'Search',
-    //             showSearch: false
-    //         });
-    //         window.fs_test = $('#age').fSelect({
-    //             placeholder: '연령',
-    //             numDisplayed: 2,
-    //             overflowText: '{n} selected',
-    //             noResultsText: 'No results found',
-    //             searchText: 'Search',
-    //             showSearch: false
-    //         });
-    //         window.fs_test = $('#price').fSelect({
-    //             placeholder: '가격대',
-    //             numDisplayed: 2,
-    //             overflowText: '{n} selected',
-    //             noResultsText: 'No results found',
-    //             searchText: 'Search',
-    //             showSearch: false
-    //         });
-    //         window.fs_test = $('#category').fSelect({
-    //             placeholder: '카테고리',
-    //             numDisplayed: 2,
-    //             overflowText: '{n} selected',
-    //             noResultsText: 'No results found',
-    //             searchText: 'Search',
-    //             showSearch: false
-    //         });
-    //
-    //
-    //         let container = $('#pagination');
-    //         container.pagination({
-    //             pageSize: 5,
-    //             dataSource: function (done) {
-    //                 let genders = $('#gender option:selected').map(function () {
-    //                     return this.value;
-    //                 }).get();
-    //
-    //                 let ages = $('#age option:selected').map(function () {
-    //                     return this.value;
-    //                 }).get();
-    //
-    //                 let prices = $('#price option:selected').map(function () {
-    //                     return this.value;
-    //                 }).get();
-    //
-    //                 let categories = $('#category option:selected').map(function () {
-    //                     return this.value;
-    //                 }).get();
-    //
-    //                 fetch("https://gifty4u.com/admin/product/filter", {
-    //                     method: "POST",
-    //                     headers: {
-    //                         "Content-Type": "application/json",
-    //                     },
-    //                     body: JSON.stringify({
-    //                         genders: genders,
-    //                         ages: ages,
-    //                         prices: prices,
-    //                         categories: categories
-    //                     }),
-    //                 }).then((response) => response.json())
-    //                     .then((res) => {
-    //                         console.log(res.data)
-    //                         done(res.data)
-    //                     }).catch((err) => {
-    //                     console.log(err.error)
-    //                 })
-    //             }
-    //             ,
-    //             callback: function (data, pagination) {
-    //                 $('#product_list').empty();
-    //                 var dataHtml = '';
-    //                 $.each(data, function (index, product) {
-    //                     dataHtml += `<tr> <td scope="col"><p>${product.product_code}</p></td>
-    //                   <td scope="col" style><p onclick="window.open('https://gifty4u.com/admin/product/detail?product_code=${product.product_code}','상품수정','width=900,height=1000,left=500,top=50')">${product.product_name}</p></td>
-    //                   <td scope="col"><p>${product.category}</p></td>
-    //                   <td scope="col"><p><img src="${product.thumbnail}" alt="" style="width:100px; height: 100px;"/></p></td>
-    //                   <td scope="col"><p>${product.title}</p></td>
-    //                   <td scope="col"><p>${product.brand}</p></td>
-    //                   <td scope="col"><p>${product.exposure_count}</p></td>
-    //                   <td scope="col"><p>${product.love_count}</p></td>
-    //                   <td scope="col"><p>${product.order_count}</p></td>
-    //                   <td scope="col"><button type="button" class="btn btn-light" onclick="deleteProduct('${product.product_code}')">삭제</button></td></tr>`
-    //                 });
-    //                 $("#product_list").append(dataHtml);
-    //             }
-    //         })
-    //     });
-    // })(jQuery);
-    //
-    // function filter() {
-    //     let container = $('#pagination');
-    //     container.pagination({
-    //         pageSize: 5,
-    //         dataSource: function (done) {
-    //             let genders = $('#gender option:selected').map(function () {
-    //                 return this.value;
-    //             }).get();
-    //
-    //             let ages = $('#age option:selected').map(function () {
-    //                 return this.value;
-    //             }).get();
-    //
-    //             let prices = $('#price option:selected').map(function () {
-    //                 return this.value;
-    //             }).get();
-    //
-    //             let categories = $('#category option:selected').map(function () {
-    //                 return this.value;
-    //             }).get();
-    //
-    //             fetch("https://gifty4u.com/admin/product/filter", {
-    //                 method: "POST",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                 },
-    //                 body: JSON.stringify({
-    //                     genders: genders,
-    //                     ages: ages,
-    //                     prices: prices,
-    //                     categories: categories
-    //                 }),
-    //             }).then((response) => response.json())
-    //                 .then((res) => {
-    //                     console.log(res.data)
-    //                     done(res.data)
-    //                 }).catch((err) => {
-    //                 console.log(err.error)
-    //             })
-    //         },
-    //
-    //         callback: function (data, pagination) {
-    //             $('#product_list').empty();
-    //             var dataHtml = '';
-    //             $.each(data, function (index, product) {
-    //                 dataHtml += `<tr> <td scope="col"><p>${product.product_code}</p></td>
-    //                   <td scope="col" style="width:200px"><p onclick="window.open('https://gifty4u.com/admin/product/detail?product_code=${product.product_code}','상품수정','width=900,height=1000,left=500,top=50')">${product.product_name}</p></td>
-    //                   <td scope="col"><p>${product.category}</p></td>
-    //                   <td scope="col"><p><img src="${product.thumbnail}" alt="" style="width:100px; height: 100px;"/></p></td>
-    //                   <td scope="col"><p>${product.title}</p></td>
-    //                   <td scope="col"><p>${product.brand}</p></td>
-    //                   <td scope="col"><p>${product.exposure_count}</p></td>
-    //                   <td scope="col"><p>${product.love_count}</p></td>
-    //                   <td scope="col"><p>${product.order_count}</p></td>
-    //                   <td scope="col"><button type="button" class="btn btn-light" onclick="deleteProduct('${product.product_code}')">삭제</button></td></tr>`
-    //             });
-    //             $("#product_list").append(dataHtml);
-    //         }
-    //     })
-    // }
-    //
-    //
-    //
-    // function deleteProduct(product_code) {
-    //     fetch("https://gifty4u.com/admin/product", {
-    //         method: "DELETE",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify({
-    //             product_code: product_code,
-    //         }),
-    //     }).then((response) => response.json())
-    //         .then((res) => {
-    //             console.log(res.data)
-    //             if (res.data === 'delete') {
-    //                 alert("제품이 삭제됐습니다")
-    //                 window.location.reload();
-    //             }
-    //         }).catch((err) => {
-    //         alert(err.error)
-    //         console.log(err.error)
-    //     })
-    //
-    // }
 </script>
 </body>
 </html>

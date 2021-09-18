@@ -9,7 +9,15 @@ async function setProductInfo(product) {
     const orderCount = await Order.findAndCountAll({
         where: {product_id: productData.id}
     });
-    const ageRange = productData.Age.range.split(',');
+
+    const tmpAgeRange = productData.Age.range.split(',');
+    let ageRange;
+    if (tmpAgeRange.length === 1) {
+        ageRange = `${tmpAgeRange[0]}세 이상`;
+    } else {
+        ageRange = `${tmpAgeRange[0]}~${tmpAgeRange[1]}세`;
+    }
+
     const tmpPriceRange = productData.Price.range;
     let priceRange;
     if (tmpPriceRange % 10000 === 0) {
@@ -17,6 +25,7 @@ async function setProductInfo(product) {
     } else {
         priceRange = `${parseInt(tmpPriceRange /10000)}만 ${parseInt(tmpPriceRange % 10000 / 1000)}천`;
     }
+
     const images = [];
     productData.Images.forEach(Image => {
         images.push(Image.dataValues.url);
@@ -37,8 +46,8 @@ async function setProductInfo(product) {
         orderCount: orderCount.count,
         retailPrice: productData.price,
         gender: productData.gender,
-        age: `${ageRange[0]}~${ageRange[1]}세`,
-        price: `${priceRange}원`,
+        age: ageRange,
+        price: priceRange,
     };
     return ret;
 }

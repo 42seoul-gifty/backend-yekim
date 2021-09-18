@@ -37,7 +37,6 @@ async function getUserInfoFromDB(accountInfo) {
             where: {
                 name: accountInfo.profile.nickname,
                 email: accountInfo.email,
-                loginType: 1,
             },
         });
         const userName = userFromDB.dataValues.name;
@@ -59,8 +58,8 @@ exports.setTokenAboutKakao = async function (req, res, next) {
         const {kakao_account} = userInfo.data;
         const user = await getUserInfoFromDB(kakao_account);
         const {accessToken, refreshToken} = await signToken(user, true);
-        // User 모델에 token 추가
         user.token = refreshToken;
+        user.loginType = 1;
         await user.save({fields: ['token']});
         const userDetail = await getUserDetailForm(user);
 
@@ -75,7 +74,7 @@ exports.setTokenAboutKakao = async function (req, res, next) {
     } catch (err) {
         console.error('jwt token 설정 오류 [kakao로부터 받은 auth code 만료]:', err.data);
         const msg = 'kakao auth code가 만료되었습니다.';
-        const ret = setResponseForm(true, "", msg);
+        const ret = setResponseForm(false, "", msg);
         res.json(ret);
     }
 }
