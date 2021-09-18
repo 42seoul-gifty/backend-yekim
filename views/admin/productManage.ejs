@@ -177,31 +177,6 @@
         return productRow;
     }
 
-    async function getDataAboutFilter() {
-        let filterValue = {
-            gender: document.getElementById('gender').value,
-            age: ageRangeToId(document.getElementById('age').value),
-            price: priceRangeToId(document.getElementById('price').value),
-            category: categoryToId(document.getElementById('category').value),
-        };
-        try {
-            const axiosResult = await axios({
-                method: 'post',
-                url: 'http://localhost:4242/admin/product/filter',
-                data: {
-                    gender: filterValue.gender,
-                    age: filterValue.age,
-                    price: filterValue.price,
-                    category: filterValue.category,
-                }
-            });
-            return (axiosResult.data);
-        } catch (err) {
-            console.err("필터값 전달 오류:", err);
-        }
-        console.log('제출 완료');
-    }
-
     function ageRangeToId(range) {
         if (range === '전체')
             return '전체';

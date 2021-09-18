@@ -1,6 +1,7 @@
 const {Product, Age, Price, Category, Brand, Image, Like, Receiver} = require("../../models/");
 const getAgeRange = require('../../libs/getAgeRange');
 const getPriceRange = require('../../libs/getPriceRange');
+const {getAgeList, getPriceList, getCategoryList, getBrandList} = require('../../libs/getModelList');
 
 // TODO: image, viewCount, orderCount 추가
 // TODO: orderCount 계수 시, receiver shipment 배송 완료인지 확인
@@ -93,47 +94,6 @@ exports.getProductDetail = async function (req, res, next) {
     }
 }
 
-function getAgeList(ages) {
-    const ageList = ['전체'];
-    for (let idx = 0; idx < ages.length; ++idx) {
-        const tmpAge = ages[idx].range.split(',');
-        if (idx != ages.length - 1) {
-            ageList.push(`${tmpAge[0]}~${tmpAge[1]}세`);
-        } else {
-            ageList.push(`${tmpAge[0]}세 이상`);
-        }
-    }
-    return ageList;
-}
-
-function getPriceList(prices) {
-    const priceList = ['전체'];
-    for (let idx = 0; idx < prices.length; ++idx) {
-        const tmpPrice = parseInt(prices[idx].range, 10);
-        if (tmpPrice % 10000 === 0) {
-            priceList.push(`${tmpPrice / 10000}만원`);
-        } else {
-            priceList.push(`${parseInt(tmpPrice / 10000)}만 ${parseInt((tmpPrice % 10000) / 1000)}천원`);
-        }
-    }
-    return priceList;
-}
-
-function getCategoryList(categories) {
-    const categoryList = ['카테고리'];
-    categories.forEach(category => {
-        categoryList.push(category.type);
-    });
-    return categoryList;
-}
-
-function getBrandList(brands) {
-    const brandList = ['판매처'];
-    brands.forEach(brand => {
-        brandList.push(brand.name);
-    });
-    return brandList;
-}
 
 exports.registerProduct = async function (req, res, next) {
     const productInfo = req.body;
@@ -245,7 +205,9 @@ exports.editProduct = async function (req, res, next) {
         const brandList = getBrandList(brands);
         product.brand_id = brandList.indexOf(productInfo.brand);
 
-        await product.save({fields: ['age_id', 'brand_id', 'category_id', 'price_id']});
+        await product.save({
+            fields: product._options.attributes,
+        });
 
         for (let idx = 0; idx < imagesPathList.length; ++idx) {
             const tmpImage = await Image.create({

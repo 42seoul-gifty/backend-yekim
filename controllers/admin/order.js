@@ -32,6 +32,7 @@ exports.renderOrderManage = function (req, res, next) {
 
 // TODO: 단체 주문의 경우, Receiver 단위로 for문을 돌릴 것.
 // TODO: Receiver가 여러명이 주어지는 경우, 이중루프로 처리하기.
+// TODO: filter 값 범주에 따라 Date 계산 후 출력하기
 exports.getOrders = async function (req, res, next) {
     const filter = req.body.filter;
     const keys = Object.keys(filter);

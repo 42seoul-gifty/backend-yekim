@@ -26,7 +26,15 @@
                     <tr>
                     <tr>
                         <td class="manage">
-                            <select id="monthly" class="manage form-select">
+                            <select id="year" class="manage form-select">
+                                <option value="전체">전체</option>
+                                <option value="1">2021</option>
+                                <option value="2">2022</option>
+                                <option value="3">2023</option>
+                            </select>
+                        </td>
+                        <td class="manage">
+                            <select id="month" class="manage form-select">
                                 <option value="전체">전체</option>
                                 <option value="1">1월</option>
                                 <option value="2">2월</option>
@@ -43,12 +51,11 @@
                             </select>
                         </td>
                         <td class="manage">
-                            <select id="weekly" class="manage form-select">
+                            <select id="day_range" class="manage form-select">
                                 <option value="전체">전체</option>
-                                <option value="1">1주차</option>
-                                <option value="2">2주차</option>
-                                <option value="3">3주차</option>
-                                <option value="4">4주차</option>
+                                <option value="1">10일 이전</option>
+                                <option value="2">11~20일</option>
+                                <option value="3">21일 이후</option>
                             </select>
                         </td>
                         <td>
@@ -85,8 +92,9 @@
     (function ($) {
         $(async function () {
             let filter = {
-                monthly: '전체',
-                weekly: '전체',
+                year: '전체',
+                month: '전체',
+                day_range: '전체',
             }
 
             function showOrders(orders) {
@@ -101,16 +109,17 @@
             orders = setOrdersInfo(orders.data);
             showOrders(orders);
 
-            // $(".btn, .btn-primary").css({ marginLeft: "5px", height: "40px" })
-            //     .click(async function() {
-            //         const filter = {
-            //             monthly: document.getElementById('monthly').value,
-            //             weekly: ageRangeToId(document.getElementById('weekly').value),
-            //         };
-            //         let orders = await getOrdersFromServer(filter);
-            //         orders = setOrdersInfo(orders.data);
-            //         showOrders(orders);
-            //     });
+            $(".btn, .btn-primary").css({ marginLeft: "5px", height: "40px" })
+                .click(async function() {
+                    const filter = {
+                        year: $('#year').val(),
+                        month: $('#month').val(),
+                        day_range: $('#day_range').val(),
+                    };
+                    let orders = await getOrdersFromServer(filter);
+                    orders = setOrdersInfo(orders.data);
+                    showOrders(orders);
+                });
         });
     })(jQuery);
 
