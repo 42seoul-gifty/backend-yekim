@@ -1,30 +1,20 @@
-const {Product, Age, Price, Category, Brand, Image, Like, Order} = require("../../models/");
+const {Product, Age, Price, Category, Brand, Image, Like, Receiver} = require("../../models/");
+const getAgeRange = require('../../libs/getAgeRange');
+const getPriceRange = require('../../libs/getPriceRange');
 
 // TODO: image, viewCount, orderCount 추가
+// TODO: orderCount 계수 시, receiver shipment 배송 완료인지 확인
 async function setProductInfo(product) {
     const productData = product.dataValues;
     const likeCount = await Like.findAndCountAll({
         where: {product_id: productData.id, value: 1}
     });
-    const orderCount = await Order.findAndCountAll({
+    const orderCount = await Receiver.findAndCountAll({
         where: {product_id: productData.id}
     });
 
-    const tmpAgeRange = productData.Age.range.split(',');
-    let ageRange;
-    if (tmpAgeRange.length === 1) {
-        ageRange = `${tmpAgeRange[0]}세 이상`;
-    } else {
-        ageRange = `${tmpAgeRange[0]}~${tmpAgeRange[1]}세`;
-    }
-
-    const tmpPriceRange = productData.Price.range;
-    let priceRange;
-    if (tmpPriceRange % 10000 === 0) {
-        priceRange = `${tmpPriceRange /10000}만`;
-    } else {
-        priceRange = `${parseInt(tmpPriceRange /10000)}만 ${parseInt(tmpPriceRange % 10000 / 1000)}천`;
-    }
+    const ageRange = getAgeRange(productData.Age);
+    const priceRange = getPriceRange(productData.Price);
 
     const images = [];
     productData.Images.forEach(Image => {
@@ -60,7 +50,6 @@ exports.renderProductRegister = function (req, res, next) {
     res.render('admin/productRegister');
 }
 
-// Order에서 관련 product 주문 수 카운트하기
 exports.getProducts = async function (req, res, next) {
     const filter = req.body.filter;
     const keys = Object.keys(filter);
@@ -222,7 +211,6 @@ exports.renderEditPage = async function (req, res, next) {
 
 // TODO: edit에서도 thumbnail, image에 대해서 파일처리
 exports.editProduct = async function (req, res, next) {
-    console.log(req.body);
     const productInfo = req.body;
 
     const imagesPathList = productInfo.images.split('\n');
