@@ -27,13 +27,14 @@
     <br>
     <div class="input-group">
         <input id="access_token" type="text" class="form-control" aria-describedby="basic-addon1">
+        <button id="register" type="button" class="btn btn-primary" onclick="setTokensOnHeaders()" style="width: 200px; height:50px; margin: 0 40%;">
+            프로필 페이지
+        </button>
     </div>
     <div class="input-group">
         <input id="refresh_token" type="text" class="form-control" aria-describedby="basic-addon1">
-    </div>
-    <div>
-        <button id="register" type="button" class="btn btn-primary" onclick="setTokensOnHeaders()" style="width: 200px; height:50px; margin: 0 40%;">
-            토큰전달
+        <button id="register" type="button" class="btn btn-primary" onclick="renewToken()" style="width: 200px; height:50px; margin: 0 40%;">
+            토큰갱신
         </button>
     </div>
     <div>
@@ -73,11 +74,26 @@
 
     function setTokensOnHeaders() {
         const accessToken = document.getElementById('access_token').value;
-        const refreshToken = document.getElementById('refresh_token').value;
+        // const refreshToken = document.getElementById('refresh_token').value;
         axios.get(`${hostAddr}/profile`, {
             headers: {
-                'access-token': accessToken,
-                'refresh-token': refreshToken,
+                'Authorization': `Bearer ${accessToken}`,
+            }
+        })
+            .then(function(response){
+                console.log(response.data);
+            })
+            .catch(function(error){
+                console.log(error);
+            })
+    }
+
+    function renewToken() {
+        const refreshToken = document.getElementById('refresh_token').value;
+        // const refreshToken = document.getElementById('refresh_token').value;
+        axios.get(`${hostAddr}/token/refresh`, {
+            headers: {
+                'Authorization': `Bearer ${refreshToken}`,
             }
         })
             .then(function(response){
