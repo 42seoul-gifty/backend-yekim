@@ -28,9 +28,11 @@ exports.getProductsByPreference = async function (req, res, next) {
 }
 
 exports.getProductByPk = async function (req, res, next) {
-    const productId = req.params.id;
+    const productCode = req.params.id;
     try {
-        const product = await Product.findByPk(parseInt(productId, 10));
+        const product = await Product.findOne({
+            where: {code: productCode},
+        });
         const productDetail = await getProductDetailForm(product);
 
         const msg = '해당 상품이 조회되었습니다.'

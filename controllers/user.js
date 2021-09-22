@@ -1,7 +1,26 @@
-const { User, Order, Receiver, Product, Age, Price} = require('../models');
+const { User, Order, Receiver, Age, Price} = require('../models');
 
-const setResponseForm = require('../libs/setResponseForm');
+const getUserDetailForm = require('../libs/getUserDetailForm');
 const getOrderDetailForm = require('../libs/getOrderDetailForm');
+const setResponseForm = require('../libs/setResponseForm');
+
+exports.readUser = async function (req, res, next) {
+    const userId = req.params.id;
+    try {
+        const user = await User.findOne({
+            where: { id: userId },
+        });
+        const userDetail = await getUserDetailForm(user);
+
+        const data = userDetail;
+        const msg = '특정 유저 조회가 완료되었습니다.';
+        const ret = setResponseForm(true, data, msg);
+        res.json(ret);
+    } catch (err) {
+        console.log('특정 유저 조회 오류:', err);
+        next(err);
+    }
+}
 
 // TODO: user_id로 user 검증하는 알고리즘 삽입하기
 exports.readOrderById = async function (req, res, next) {

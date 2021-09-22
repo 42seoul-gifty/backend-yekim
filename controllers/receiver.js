@@ -77,9 +77,10 @@ exports.getProductsChoiceList = async function (req, res, next) {
             }
         })
         let productDetails = [];
-        products.forEach((product) => {
-           productDetails.push(getProductDetailForm(product));
-        });
+        for (let idx = 0; idx < products.length; ++idx) {
+            const tmpProductDetail = await getProductDetailForm(products[idx]);
+            productDetails.push(tmpProductDetail);
+        }
 
         const data = {
             giver_name: order.giverName,

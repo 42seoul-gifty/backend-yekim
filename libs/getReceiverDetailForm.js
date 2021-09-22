@@ -4,7 +4,7 @@ module.exports = async function (receiverModel) {
     try {
         const receiverData = receiverModel.dataValues;
         const productModel = receiverModel.Product;
-        const productDetail = getProductDetailForm(productModel);
+        const productDetail = await getProductDetailForm(productModel);
         const receiverDetail = {
             id: receiverData.id,
             name: receiverData.name,
