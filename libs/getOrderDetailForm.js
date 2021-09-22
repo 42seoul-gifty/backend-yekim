@@ -1,11 +1,13 @@
+const {Product} = require('../models');
 const getReceiverDetail = require('./getReceiverDetailForm');
 
 module.exports = async function (orderModel) {
     const orderData = orderModel.dataValues;
     try {
-        const receiverModel = (await orderModel.getReceiver())[0];
-        const productModel = orderModel.Product;
-        const receiverDetail = await getReceiverDetail(receiverModel, productModel);
+        const receiverModel = (await orderModel.getReceiver({
+            include: Product,
+        }))[0];
+        const receiverDetail = await getReceiverDetail(receiverModel);
         const orderDetail = {
             giver_name: orderData.giverName,
             giver_phone: orderData.giverPhone,

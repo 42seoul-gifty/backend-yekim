@@ -1,19 +1,14 @@
 const { User, Order, Receiver, Product, Age, Price} = require('../models');
 
 const setResponseForm = require('../libs/setResponseForm');
-const getReceiverDetailForm = require('../libs/getReceiverDetailForm');
 const getOrderDetailForm = require('../libs/getOrderDetailForm');
 
 // TODO: user_id로 user 검증하는 알고리즘 삽입하기
-// TODO: preference 모델 추가하기
-// TODO: detail 정보들을 가공하는 함수 생성하기
-// TODO: product 모델의 속성값 채우기
 exports.readOrderById = async function (req, res, next) {
     const orderId = req.params.order_id;
     try {
         const order = await Order.findOne({
             where: { id: orderId },
-            include: Product,
         });
         const orderDetail = await getOrderDetailForm(order);
 
@@ -31,9 +26,7 @@ exports.readOrders = async function (req, res, next) {
     const userId = req.params.user_id;
     try {
         const user = await User.findByPk(userId);
-        const orders = await user.getOrder({
-            include: Product,
-        });
+        const orders = await user.getOrder();
         let orderList = [];
         for (let idx = 0; idx < orders.length; ++idx) {
             const tmpOrderDetail = await getOrderDetailForm(orders[idx]);

@@ -20,7 +20,6 @@ exports.readReceiverById = async function (req, res, next) {
 
 exports.pickProduct = async function (req, res, next) {
     const receiverId = req.params.id;
-    // const receiverInfo = req.query;
     const receiverInfo = req.body;
     const likes = receiverInfo.likes;
     const dislikes = receiverInfo.dislikes;
@@ -38,7 +37,7 @@ exports.pickProduct = async function (req, res, next) {
         const product = await Product.findOne({
             where: { code: receiverInfo.product_id }
         });
-        await product.addOrder(receiver.Order);
+        await product.addReceiver(receiver);
 
         for (let idx = 0; idx < likes.length; ++idx) {
             const tmpProduct = await Product.findByPk(likes[idx]);
