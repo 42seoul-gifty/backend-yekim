@@ -82,8 +82,17 @@ exports.createOrder = async function (req, res, next) {
         price.addOrder(order);
         order.addReceiver(receiver);
         user.addOrder(order);
+
+        // 결제를 위한 order 속성을 추가합니다.
+        order.purchaseAmount = price.range;
+        const dateFormat = order.createdAt.toISOString().slice(0,10).replace(/-/g,"");
+        const orderIdFormat = (order.id).toString().padStart(6, '0');
+        order.merchantUid = `GIFTY${dateFormat}-${orderIdFormat}`;
+        // TODO: 추후에, receiver 수에 따라서 처리하는 작업을 수행합니다.
+        await order.save({fields:['purchaseAmount', 'merchantUid']});
+
         const msg = '주문 생성이 완료되었습니다.';
-        const data = { merchant_uid: order.id };
+        const data = { merchant_uid: order.merchantUid };
         const ret = setResponseForm(true, data, msg);
         res.json(ret);
     } catch (err) {

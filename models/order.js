@@ -39,6 +39,18 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
+        merchantUid: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        impUid: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        paymentStatus: {
+            type: DataTypes.STRING,
+            defaultValue: "결제대기"
+        },
     }, {
         sequelize,
         charset: 'utf8',

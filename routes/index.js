@@ -32,4 +32,7 @@ router.use('/users', userRouter);
 const receiverRouter = require('../routes/receiver');
 router.use('/receiver', receiverRouter);
 
+const paymentRouter = require('../routes/payment');
+router.use('/payment', paymentRouter);
+
 module.exports = router;
