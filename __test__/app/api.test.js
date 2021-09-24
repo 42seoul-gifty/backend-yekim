@@ -1,6 +1,5 @@
 const axios = require('axios');
 
-
 const spyAxiosGet = jest.spyOn(axios, "get");
 const spyAxiosPost = jest.spyOn(axios, "post");
 const spyAxiosPatch = jest.spyOn(axios, "patch");
@@ -151,3 +150,4 @@ test(`${info.case[1]} ${++info.num}. 가격대 범주 확인 테스트입니다.
     expect(spyFn).toBeCalledWith(url);
     expect(priceList).toHaveProperty("success", true);
 });
+

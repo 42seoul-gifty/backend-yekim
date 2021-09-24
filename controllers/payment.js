@@ -1,5 +1,6 @@
 const axios = require('axios');
 const {Order} = require('../models');
+const setResponseForm = require('../libs/setResponseForm');
 
 async function getTokenFromIMP() {
     const axiosResult = await axios({
@@ -24,10 +25,6 @@ async function getPaymentData (imp_uid, accessToken) {
     return axiosResult.data.response;
 }
 
-function checkPayment(paymentData, amountToBePaid) {
-    const {amount} = paymentData;
-}
-
 exports.checkPayment = async function (req, res, next) {
     try {
         const {imp_uid, merchant_uid} = req.body;
@@ -47,21 +44,29 @@ exports.checkPayment = async function (req, res, next) {
         const {amount, status} = paymentData;
         if (amount === amountToBePaid) {
             // 관련 정보 DB에 저장
-            switch (status) {
-                case "ready":
-                    const {vbank_num, vbank_date, vbank_name} = paymentData;
-                    res.send({status: "vbankIssued", message: "가상계좌 발급 성공"});
-                    break;
-                case "paid":
-                    order.impUid = imp_uid;
-                    order.updatedAt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-                    order.paymentStatus = "결제완료";
-                    await order.save({fields:['impUid', 'updatedAt', 'paymentStatus']});
-                    res.send({status: "success", message: "일반 결제 성공"});
-                    break;
+            if (status === "ready") {
+                const {vbank_num, vbank_date, vbank_name} = paymentData;
+
+                const msg = '가상 계좌 발급을 성공했습니다.';
+                const ret = setResponseForm(true, {}, msg);
+                res.json(ret);
+                // res.send({status: "vbankIssued", message: "가상계좌 발급 성공"});
+            } else if (status === "paid") {
+                order.impUid = imp_uid;
+                order.updatedAt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+                order.paymentStatus = "결제완료";
+                await order.save({fields:['impUid', 'updatedAt', 'paymentStatus']});
+
+                const msg = '일반 결제를 성공했습니다.';
+                const ret = setResponseForm(true, {}, msg);
+                res.json(ret);
+                // res.send({status: "success", message: "일반 결제 성공"});
             }
         } else {
-            throw {status: "forgery", message: "위조된 결제시도"};
+            const msg = '위조된 결제를 시도했습니다.';
+            const ret = setResponseForm(false, {}, msg);
+            res.json(ret);
+            // throw {status: "forgery", message: "위조된 결제시도"};
         }
     } catch (err) {
         console.error("결제 실패:", err);

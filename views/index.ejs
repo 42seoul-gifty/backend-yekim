@@ -65,11 +65,11 @@
         });
     })(jQuery);
 
-    const hostAddr = 'http://localhost:4242'
+    const domain = '<%= process.env.HOST_DOMAIN %>';
     function getTokensFromServer() {
         const authCode = document.getElementById('auth_code').value;
         console.log("authCode:", authCode);
-        axios.get(`${hostAddr}/login/kakao`, {
+        axios.get(`${domain}/login/kakao`, {
             headers: {
                 'Authorization-Code': authCode
             }
@@ -87,7 +87,7 @@
     function setTokensOnHeaders() {
         const accessToken = document.getElementById('access_token').value;
         // const refreshToken = document.getElementById('refresh_token').value;
-        axios.get(`${hostAddr}/profile`, {
+        axios.get(`${domain}/profile`, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
             }
@@ -103,7 +103,7 @@
     function renewToken() {
         const refreshToken = document.getElementById('refresh_token').value;
         // const refreshToken = document.getElementById('refresh_token').value;
-        axios.get(`${hostAddr}/token/refresh`, {
+        axios.get(`${domain}/token/refresh`, {
             headers: {
                 'Authorization': `Bearer ${refreshToken}`,
             }
@@ -119,7 +119,7 @@
     function logout() {
         const accessToken = document.getElementById('access_token').value;
         const refreshToken = document.getElementById('refresh_token').value;
-        axios.post(`${hostAddr}/logout`, {
+        axios.post(`${domain}/logout`, {
             "refresh_token": refreshToken,
         },{
             headers: {
@@ -144,7 +144,7 @@
         IMP.request_pay({ // param
             pg: "html5_inicis",
             pay_method: "card",
-            merchant_uid: "GIFTY20210924-000014",
+            merchant_uid: "GIFTY20210924-000016",
             name: "노르웨이 회전 의자",
             amount: 10,
             buyer_email: "coramdeo0708@gmail.com",
@@ -159,7 +159,7 @@
                     merchant_uid: rsp.merchant_uid
                 };
                 try {
-                    const ret = await axios.post("<%= process.env.HOST_DOMAIN %>/payment/validation", data, {
+                    const ret = await axios.post(`${domain}/payment/validation`, data, {
                         headers: {'Content-Type': 'application/json'}
                     });
                     console.log(ret);
