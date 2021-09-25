@@ -18,9 +18,10 @@ const info = {
     ],
     num: 0,
     userId: 1,
+    orderId: 4,
     receiverId: 4,
     preference: {
-        "gender": "전체",
+        "gender": 1,
         "age": 1,
         "price": 1,
     },
@@ -29,15 +30,13 @@ const info = {
 };
 
 test(`${info.case[0]} ${++info.num}. ${info.userId}번 user 조회 테스트입니다.`, async () => {
-    const spyFn = jest.spyOn(axios, "get");
-
     const url = `${info.endPoint}/users/${info.userId}`;
-    const axiosResult = await spyFn(url);
+    const axiosResult = await spyAxiosGet(url);
     const axiosData = axiosResult.data;
     console.log('${info.userId}번 유저 조회 결과:', axiosData);
 
-    expect(spyFn).toBeCalledTimes(1);
-    expect(spyFn).toBeCalledWith(url);
+    expect(spyAxiosGet).toBeCalledTimes(1);
+    expect(spyAxiosGet).toBeCalledWith(url);
     expect(axiosData).toHaveProperty("success", true);
     expect(axiosData.data).toHaveProperty("id", info.userId);
 });
@@ -55,8 +54,6 @@ test(`${info.case[0]} ${++info.num}. 주문 생성 테스트입니다.`, async (
     const url = `${info.endPoint}/users/${info.userId}/orders`;
     const axiosResult = await spyAxiosPost(url, userData);
     const orderDetail = axiosResult.data;
-    info.orderId = orderDetail.data.merchant_uid;
-    console.log(`생성된 ${info.orderId}번 주문 디테일`, orderDetail);
 
     expect(spyAxiosPost).toBeCalledTimes(1);
     expect(spyAxiosPost).toBeCalledWith(url, userData);
@@ -115,39 +112,32 @@ test(`${info.case[1]} ${++info.num}. ${info.receiverId}번 수신자 선물 선�
 
 
 test(`${info.case[1]} ${++info.num}. 선택 상품 확인 테스트입니다.`, async () => {
-    const spyFn = jest.spyOn(axios, "get");
-
     const url = `${info.endPoint}/products/${info.productCode}`;
     const axiosResult = await spyAxiosGet(url);
     const productDetail = axiosResult.data;
     console.log('선택된 상품 디테일 조회:', productDetail);
 
-    expect(spyFn).toBeCalledTimes(1);
-    expect(spyFn).toBeCalledWith(url);
+    expect(spyAxiosGet).toBeCalledTimes(1);
+    expect(spyAxiosGet).toBeCalledWith(url);
     expect(productDetail).toHaveProperty("success", true);
 });
 
 test(`${info.case[1]} ${++info.num}. 연령대 범주 확인 테스트입니다.`, async () => {
-    const spyFn = jest.spyOn(axios, "get");
-
     const url = `${info.endPoint}/ages`;
     const axiosResult = await spyAxiosGet(url);
     const ageList = axiosResult.data;
 
-    expect(spyFn).toBeCalledTimes(1);
-    expect(spyFn).toBeCalledWith(url);
+    expect(spyAxiosGet).toBeCalledTimes(1);
+    expect(spyAxiosGet).toBeCalledWith(url);
     expect(ageList).toHaveProperty("success", true);
 });
 
 test(`${info.case[1]} ${++info.num}. 가격대 범주 확인 테스트입니다.`, async () => {
-    const spyFn = jest.spyOn(axios, "get");
-
     const url = `${info.endPoint}/prices`;
     const axiosResult = await spyAxiosGet(url);
     const priceList = axiosResult.data;
 
-    expect(spyFn).toBeCalledTimes(1);
-    expect(spyFn).toBeCalledWith(url);
+    expect(spyAxiosGet).toBeCalledTimes(1);
+    expect(spyAxiosGet).toBeCalledWith(url);
     expect(priceList).toHaveProperty("success", true);
 });
-
