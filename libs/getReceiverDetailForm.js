@@ -1,13 +1,12 @@
-const getProductDetailForm = require('./getProductDetailForm');
+const getProductDetailForm = require('../libs/getProductDetailForm');
 
 module.exports = async function (receiverModel) {
     try {
         const receiverData = receiverModel.dataValues;
-        const productModel = receiverModel.Product;
-        const productDetail = await getProductDetailForm(productModel);
+        const productDetail = getProductDetailForm(receiverModel.Product);
         const receiverDetail = {
             id: receiverData.id,
-            name: receiverData.name,
+            nickname: receiverData.name,
             phone: receiverData.phone,
             product: productDetail,
             address: {
@@ -18,6 +17,6 @@ module.exports = async function (receiverModel) {
         }
         return receiverDetail;
     } catch (err) {
-        console.error('수신자 디테일 생성 오류:', err);
+        console.error('유저 디테일 생성 오류:', err);
     }
 }

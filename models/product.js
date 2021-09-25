@@ -19,6 +19,9 @@ module.exports = (sequelize, DataTypes) => {
             Product.belongsTo(models.Category, {
                 foreignKey: 'category_id',
             });
+            Product.belongsTo(models.Gender, {
+                foreignKey: 'gender_id',
+            });
             Product.belongsTo(models.Age, {
                 foreignKey: 'age_id',
             });
@@ -67,10 +70,6 @@ module.exports = (sequelize, DataTypes) => {
         feeRate: {
             type: DataTypes.INTEGER,
             notNull: false,
-        },
-        gender: {
-            type: DataTypes.STRING,
-            allowNull: false,
         },
     }, {
         sequelize,

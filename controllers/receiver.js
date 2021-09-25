@@ -1,4 +1,4 @@
-const { Receiver, Order, Product, Like } = require('../models');
+const {Receiver, Order, Product, Like} = require('../models');
 const setResponseForm = require('../libs/setResponseForm');
 const getProductDetailForm = require('../libs/getProductDetailForm');
 
@@ -6,11 +6,12 @@ exports.readReceiverById = async function (req, res, next) {
     const receiverId = req.params.id;
     try {
         const receiver = await Receiver.findOne({
-            where: { id: receiverId },
-            attributes: ['id', 'name', 'phone'],
+            where: {id: receiverId},
             include: Product,
         });
-        const ret = setResponseForm(true, receiver, "hihi");
+
+        const msg = "특정 수신자 정보가 조회되었습니다.";
+        const ret = setResponseForm(true, receiver, msg);
         res.json(ret);
     } catch (err) {
         console.error("수신자 정보 디테일 조회 오류:", err);
@@ -25,7 +26,7 @@ exports.pickProduct = async function (req, res, next) {
     const dislikes = receiverInfo.dislikes;
     try {
         const receiver = await Receiver.findOne({
-            where: { id: receiverId },
+            where: {id: receiverId},
             include: Order
         });
         receiver.postcode = receiverInfo.post_code;
@@ -35,20 +36,20 @@ exports.pickProduct = async function (req, res, next) {
             fields: ['postcode', 'address', 'detailAddress']
         });
         const product = await Product.findOne({
-            where: { code: receiverInfo.product_id }
+            where: {code: receiverInfo.product_id}
         });
         await product.addReceiver(receiver);
 
         for (let idx = 0; idx < likes.length; ++idx) {
             const tmpProduct = await Product.findByPk(likes[idx]);
             await receiver.addProduct(tmpProduct, {
-                through: { value: true, }
+                through: {value: true,}
             });
         }
         for (let idx = 0; idx < dislikes.length; ++idx) {
             const tmpProduct = await Product.findByPk(dislikes[idx]);
             await receiver.addProduct(tmpProduct, {
-                through: { value: false, }
+                through: {value: false,}
             });
         }
 
@@ -65,13 +66,13 @@ exports.getProductsChoiceList = async function (req, res, next) {
     const receiverId = req.params.id;
     try {
         const receiver = await Receiver.findOne({
-            where: { id: receiverId },
+            where: {id: receiverId},
             include: Order,
         });
         const order = receiver.Order;
         const products = await Product.findAll({
             where: {
-                gender: order.gender,
+                gender_id: order.gender_id,
                 age_id: order.age_id,
                 price_id: order.price_id,
             }

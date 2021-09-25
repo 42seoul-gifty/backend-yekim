@@ -18,4 +18,7 @@ router.use('/product', productRouter);
 const orderRouter = require('./order');
 router.use('/order', orderRouter);
 
+const appRouter = require('./app');
+router.use('/app', appRouter);
+
 module.exports = router;

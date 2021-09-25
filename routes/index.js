@@ -9,6 +9,7 @@ router.get('/', (req, res, next) => {
         code: undefined,
     })
 });
+router.get('/genders', metaInformationController.getGenders);
 router.get('/ages', metaInformationController.getAges);
 router.get('/prices', metaInformationController.getPrices);
 

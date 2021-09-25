@@ -8,7 +8,7 @@ exports.getProductsByPreference = async function (req, res, next) {
         let productDetails = [];
         const products = await Product.findAll({
             where: {
-                gender: preferences.gender,
+                gender_id: preferences.gender,
                 age_id: preferences.age,
                 price_id: preferences.price,
             }

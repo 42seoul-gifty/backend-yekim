@@ -15,7 +15,6 @@ module.exports = {
                 tmpAge.id = i + 1;
                 const tmpRange = [startAge + 5 * i, (startAge + 4) + 5 * i];
                 tmpAge.range = `${tmpRange[0]},${tmpRange[1]}`;
-
             }
             ageSeed.push(tmpAge);
         }

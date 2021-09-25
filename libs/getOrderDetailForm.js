@@ -14,8 +14,8 @@ module.exports = async function (orderModel) {
             receiver: receiverDetail,
             order_date: orderData.createdAt,
             preference: {
+                gender: orderData.gender_id,
                 age: orderData.age_id,
-                gender: orderData.gender,
                 price: orderData.price_id,
             }
         }

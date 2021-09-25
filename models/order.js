@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'order_id',
                 as: 'Receiver',
             });
+            Order.belongsTo(models.Gender, {
+                foreignKey: 'gender_id',
+            });
             Order.belongsTo(models.Age, {
                 foreignKey: 'age_id',
             });
@@ -30,10 +33,6 @@ module.exports = (sequelize, DataTypes) => {
         giverPhone: {
             type: DataTypes.STRING,
             allowNull: true,
-        },
-        gender: {
-            type: DataTypes.STRING,
-            allowNull: false,
         },
         purchaseAmount: {
             type: DataTypes.INTEGER,
