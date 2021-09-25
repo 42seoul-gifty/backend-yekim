@@ -1,3 +1,8 @@
+exports.getGenderList = function(ages) {
+    const genderList = ['전체', '남성', '여성'];
+    return genderList;
+}
+
 exports.getAgeList = function(ages) {
     const ageList = ['전체'];
     for (let idx = 0; idx < ages.length; ++idx) {

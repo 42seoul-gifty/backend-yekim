@@ -125,7 +125,7 @@
             $(".btn, .btn-primary").css({ marginLeft: "5px", height: "40px" })
                 .click(async function() {
                     const filter = {
-                        gender: document.getElementById('gender').value,
+                        gender_id: genderTypeToId(document.getElementById('gender').value),
                         age_id: ageRangeToId(document.getElementById('age').value),
                         price_id: priceRangeToId(document.getElementById('price').value),
                         category_id: categoryToId(document.getElementById('category').value),
@@ -175,6 +175,11 @@
         productRow += `<td scope="col"><button type="button" class="btn btn-light"><p>삭제</button></p></td>`;
         productRow += '</tr>'
         return productRow;
+    }
+
+    function genderTypeToId(type) {
+        const genderTypes = ["전체", "남성", "여성"];
+        return (genderTypes.indexOf(type) + 1);
     }
 
     function ageRangeToId(range) {

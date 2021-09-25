@@ -1,4 +1,4 @@
-const {Order, Age, Price, Product } = require("../../models/");
+const {Order, Gender, Age, Price, Product } = require("../../models/");
 const getAgeRange = require('../../libs/getAgeRange');
 const getPriceRange = require('../../libs/getPriceRange');
 
@@ -15,7 +15,7 @@ async function setOrderInfo(order, receiver) {
 
     const ret = {
         id: orderData.id,
-        gender: orderData.gender,
+        gender: orderData.Gender.type,
         age: ageRange,
         price: priceRange,
         phone: receiverData.phone,
@@ -43,7 +43,7 @@ exports.getOrders = async function (req, res, next) {
     try {
         const orders = await Order.findAll({
             where: filter,
-            include: [Age, Price]
+            include: [Gender, Age, Price]
         });
 
         const ordersForPage = [];

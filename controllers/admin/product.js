@@ -1,4 +1,4 @@
-const {Product, Age, Price, Category, Brand, Image, Like, Receiver} = require("../../models/");
+const {Product, Gender, Age, Price, Category, Brand, Image, Like, Receiver} = require("../../models/");
 const getAgeRange = require('../../libs/getAgeRange');
 const getPriceRange = require('../../libs/getPriceRange');
 const {getAgeList, getPriceList, getCategoryList, getBrandList} = require('../../libs/getModelList');
@@ -61,7 +61,7 @@ exports.getProducts = async function (req, res, next) {
     try {
         const products = await Product.findAll({
             where: filter,
-            include: [Age, Price, Category, Brand, Image],
+            include: [Gender, Age, Price, Category, Brand, Image],
         });
 
         const productsForPage = [];
@@ -187,7 +187,10 @@ exports.editProduct = async function (req, res, next) {
         product.link = productInfo.link;
         product.description = productInfo.description;
         product.detail = productInfo.detail;
-        product.gender = productInfo.gender;
+
+        const genders = await Gender.findAll({raw: true});
+        const genderList = getAgeList(genders);
+        product.gender_id = genderList.indexOf(productInfo.gender);
 
         const ages = await Age.findAll({raw: true});
         const ageList = getAgeList(ages);
