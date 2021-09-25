@@ -134,9 +134,6 @@
             formData.append('age', $('#product_age').val());
             formData.append('price', $('#product_price').val());
 
-            // for (let value of formData.values()) {
-            //     console.log(value);
-            // }
             try {
                 await axios.post('http://localhost:4242/admin/product/edit', formData, {
                     headers: {

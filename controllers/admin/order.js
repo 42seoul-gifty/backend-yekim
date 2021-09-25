@@ -1,6 +1,5 @@
 const {Order, Gender, Age, Price, Product } = require("../../models/");
-const getAgeRange = require('../../libs/getAgeRange');
-const getPriceRange = require('../../libs/getPriceRange');
+const getModelRange = require('../../libs/getModelRange');
 
 // TODO: image, viewCount, orderCount 추가
 async function setOrderInfo(order, receiver) {
@@ -8,8 +7,8 @@ async function setOrderInfo(order, receiver) {
     const receiverData = receiver.dataValues;
     const product = receiver.Product;
 
-    const ageRange = getAgeRange(orderData.Age);
-    const priceRange = getPriceRange(orderData.Price);
+    const ageRange = getModelRange.getAgeRange(orderData.Age);
+    const priceRange = getModelRange.getPriceRange(orderData.Price);
 
     const productName = product === null ? '선택 안함' : product.name;
 

@@ -108,10 +108,6 @@
         <br>
         <br>
         <br>
-        <br>
-        <br>
-        <br>
-        <br>
     </div>
 </div>
 </body>
@@ -158,10 +154,15 @@
             formData.append('fee_rate', $('#product_fee_rate').val());
             formData.append('link', $('#product_link').val());
             formData.append('description', $('#product_description').val());
+            const detail = $('#product_detail').val().replace(/\n/gi, '<br>');
             formData.append('detail', detail);
             formData.append('gender', $('#product_gender').val());
             formData.append('age', $('#product_age').val());
             formData.append('price', $('#product_price').val());
+
+            for (let value of formData.values()) {
+                console.log(value);
+            }
 
             try {
                 await axios.post('http://localhost:4242/admin/product/register', formData, {
