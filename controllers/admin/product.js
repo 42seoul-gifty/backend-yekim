@@ -51,14 +51,31 @@ exports.renderProductRegister = function (req, res, next) {
     res.render('admin/productRegister');
 }
 
-exports.getProducts = async function (req, res, next) {
-    const filter = req.body.filter;
-    const keys = Object.keys(filter);
-    for (let idx = 0; idx < keys.length; ++idx) {
-        if (filter[keys[idx]] === '전체')
-            delete filter[keys[idx]];
-    }
+exports.renderEditPage = async function (req, res, next) {
     try {
+        const productCode = req.query.product_code;
+        const product = await Product.findOne({
+            where: {code: productCode},
+            include: [Gender, Age, Price, Category, Brand, Image],
+        })
+        const productForPage = await setProductInfo(product);
+        res.render('admin/productEdit', {
+            product: productForPage
+        });
+    } catch (err) {
+        console.error('상품 수정 페이지 조회 오류:', err);
+        next(err);
+    }
+}
+
+exports.getProducts = async function (req, res, next) {
+    try {
+        const filter = req.body.filter;
+        const keys = Object.keys(filter);
+        for (let idx = 0; idx < keys.length; ++idx) {
+            if (filter[keys[idx]] === '전체')
+                delete filter[keys[idx]];
+        }
         const products = await Product.findAll({
             where: filter,
             include: [Gender, Age, Price, Category, Brand, Image],
@@ -77,9 +94,8 @@ exports.getProducts = async function (req, res, next) {
 }
 
 exports.getProductDetail = async function (req, res, next) {
-    const productCode = req.query.product_code;
-    console.log('productCode:', productCode);
     try {
+        const productCode = req.query.product_code;
         const product = await Product.findOne({
             where: {code: productCode},
             include: [Gender, Age, Price, Category, Brand, Image]
@@ -94,17 +110,45 @@ exports.getProductDetail = async function (req, res, next) {
     }
 }
 
-exports.registerProduct = async function (req, res, next) {
-    const productInfo = req.body;
-    const thumbnail = req.files.thumbnail[0];
-    const images = req.files.images;
+async function setProductMetaInfo(product, productInfo) {
+    const categories = await Category.findAll({raw: true});
+    const categoryList = getModelList.getCategoryList(categories);
+    product.category_id = categoryList.indexOf(productInfo.category);
 
-    const imagesPathList = [];
-    images.forEach(file => {
-        imagesPathList.push(file.filename);
+    const genders = await Gender.findAll({raw: true});
+    const genderList = getModelList.getGenderList(genders);
+    product.gender_id = genderList.indexOf(productInfo.gender);
+
+    const ages = await Age.findAll({raw: true});
+    const ageList = getModelList.getAgeList(ages);
+    product.age_id = ageList.indexOf(productInfo.age);
+
+    const prices = await Price.findAll({raw: true});
+    const priceList = getModelList.getPriceList(prices);
+    product.price_id = priceList.indexOf(productInfo.price);
+
+    // 만약, 새로운 브랜드이면 브랜드를 추가하고 존재하는 브랜드이면 이를 등록합니다.
+    const [brand, created] = await Brand.findOrCreate({
+        where: {name: productInfo.brand},
+        defaults: {name: productInfo.brand}
     });
+    brand.addProduct(product);
+    return product;
+}
+
+exports.registerProduct = async function (req, res, next) {
     try {
-        const product = await Product.create({
+        const productInfo = req.body;
+        const thumbnail = req.files.thumbnail[0];
+        const images = req.files.images;
+
+        const imagesPathList = [];
+        if (images) {
+            images.forEach(file => {
+                imagesPathList.push(file.filename);
+            });
+        }
+        let product = await Product.create({
             code: productInfo.code,
             name: productInfo.name,
             thumbnail: thumbnail.filename,
@@ -117,32 +161,9 @@ exports.registerProduct = async function (req, res, next) {
             include: [Image],
         });
 
-        const categories = await Category.findAll({raw: true});
-        const categoryList = getModelList.getCategoryList(categories);
-        product.category_id = categoryList.indexOf(productInfo.category);
-
-        const genders = await Gender.findAll({raw: true});
-        const genderList = getModelList.getGenderList(genders);
-        product.gender_id = genderList.indexOf(productInfo.gender);
-
-        const ages = await Age.findAll({raw: true});
-        const ageList = getModelList.getAgeList(ages);
-        product.age_id = ageList.indexOf(productInfo.age);
-
-        const prices = await Price.findAll({raw: true});
-        const priceList = getModelList.getPriceList(prices);
-        product.price_id = priceList.indexOf(productInfo.price);
-
-        // 만약, 새로운 브랜드이면 브랜드를 추가하고 존재하는 브랜드이면 이를 등록합니다.
-        const [brand, created] = await Brand.findOrCreate({
-            where: {name: productInfo.brand},
-            defaults: {name: productInfo.brand}
-        });
-        brand.addProduct(product);
-
+        product = await setProductMetaInfo(product, productInfo);
         await product.save({
-            // fields: ['category_id', 'gender_id', 'age_id', 'price_id', 'brand_id']
-            fields: ['category_id', 'gender_id', 'age_id', 'price_id']
+            fields: product._options.attributes,
         });
 
         for (let idx = 0; idx < imagesPathList.length; ++idx) {
@@ -159,30 +180,12 @@ exports.registerProduct = async function (req, res, next) {
     }
 }
 
-exports.renderEditPage = async function (req, res, next) {
-    const productCode = req.query.product_code;
-    try {
-        const product = await Product.findOne({
-            where: {code: productCode},
-            include: [Gender, Age, Price, Category, Brand, Image],
-        })
-        const productForPage = await setProductInfo(product);
-        res.render('admin/productEdit', {
-            product: productForPage
-        });
-    } catch (err) {
-        console.error('상품 수정 페이지 조회 오류:', err);
-        next(err);
-    }
-}
-
 // TODO: edit에서도 thumbnail, image에 대해서 파일처리
 exports.editProduct = async function (req, res, next) {
-    const productInfo = req.body;
-
-    const imagesPathList = productInfo.images.split('\n');
     try {
-        const product = await Product.findOne({
+        const productInfo = req.body;
+        const imagesPathList = productInfo.images.split('\n');
+        let product = await Product.findOne({
             where: { code: parseInt(productInfo.code, 10) },
             include: [Image],
         });
@@ -195,26 +198,7 @@ exports.editProduct = async function (req, res, next) {
         product.description = productInfo.description;
         product.detail = productInfo.detail;
 
-        const genders = await Gender.findAll({raw: true});
-        const genderList = getModelList.getGenderList(genders);
-        product.gender_id = genderList.indexOf(productInfo.gender);
-
-        const ages = await Age.findAll({raw: true});
-        const ageList = getModelList.getAgeList(ages);
-        product.age_id = ageList.indexOf(productInfo.age);
-
-        const prices = await Price.findAll({raw: true});
-        const priceList = getModelList.getPriceList(prices);
-        product.price_id = priceList.indexOf(productInfo.price);
-
-        const categories = await Category.findAll({raw: true});
-        const categoryList = getModelList.getCategoryList(categories);
-        product.category_id = categoryList.indexOf(productInfo.category);
-
-        const brands = await Brand.findAll({raw: true});
-        const brandList = getModelList.getBrandList(brands);
-        product.brand_id = brandList.indexOf(productInfo.brand);
-
+        product = await setProductMetaInfo(product, productInfo);
         await product.save({
             fields: product._options.attributes,
         });

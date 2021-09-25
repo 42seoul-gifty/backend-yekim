@@ -37,16 +37,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use(cors(corsOptions));
 app.use(cors());
 
-// session 관련 부분 설정부 입니다. ========================
-// app.use(session({
-//     secret: 'MY_SECRET',
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: {
-//         httpOnly: true,
-//         secure: false,
-//     },
-// }));
 const MySQLStore = require('express-mysql-session')(session);
 const sessionOptions = {
     host: process.env.HOST,
@@ -57,7 +47,6 @@ const sessionOptions = {
 }
 
 const sessionStore = new MySQLStore(sessionOptions);
-
 app.use(session({
     secret: 'SESSION_SECRET',
     resave: false,
