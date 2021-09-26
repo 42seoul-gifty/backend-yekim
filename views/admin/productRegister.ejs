@@ -121,22 +121,31 @@
         async function save() {
             if ($('#product_category').val() === "카테고리") {
                 alert("카테고리를 입력해주세요.");
+                return ;
             } else if ($('#product_code').val() === "") {
                 alert("상품코드를 입력해주세요.");
+                return ;
             } else if ($('#product_name').val() === "") {
                 alert("상품명을 입력해주세요.");
+                return ;
             } else if ($('#product_brand').val() === "") {
                 alert("판매처를 입력해주세요.");
+                return ;
             } else if ($('#product_retail_price').val() === "") {
                 alert("소비자가를 입력해주세요.");
+                return ;
             } else if ($('#product_fee_rate').val() === "") {
                 alert("수수로율을 입력해주세요.");
+                return ;
             } else if ($('#product_link').val() === "") {
                 alert("링크를 입력해주세요.");
+                return ;
             } else if ($('#product_age').val() === "연령대") {
                 alert("연령대를 선택해주세요.");
+                return ;
             } else if ($('#product_price').val() === "가격대") {
                 alert("가격대를 선택해주세요.");
+                return ;
             }
 
             const formData = new FormData();
@@ -145,7 +154,7 @@
             formData.append('name', $('#product_name').val());
             formData.append('thumbnail', document.getElementById('product_thumbnail').files[0]);
             const images = document.getElementById('product_images').files;
-            console.log(images);
+            // console.log(images);
             for (let i = 0; i < images.length; ++i) {
                 formData.append('images', images[i]);
             }
@@ -160,9 +169,9 @@
             formData.append('age', $('#product_age').val());
             formData.append('price', $('#product_price').val());
 
-            for (let value of formData.values()) {
-                console.log(value);
-            }
+            // for (let value of formData.values()) {
+            //     console.log(value);
+            // }
 
             try {
                 await axios.post('http://localhost:4242/admin/product/register', formData, {

@@ -51,6 +51,23 @@ exports.renderProductRegister = function (req, res, next) {
     res.render('admin/productRegister');
 }
 
+exports.renderProductDetail = async function (req, res, next) {
+    try {
+        const productCode = req.query.product_code;
+        const product = await Product.findOne({
+            where: {code: productCode},
+            include: [Gender, Age, Price, Category, Brand, Image]
+        });
+        const productForPage = await setProductInfo(product);
+        res.render('admin/productDetail', {
+            product: productForPage,
+        });
+    } catch (err) {
+        console.error('상품 상세 조회 오류:', err);
+        next(err);
+    }
+}
+
 exports.renderEditPage = async function (req, res, next) {
     try {
         const productCode = req.query.product_code;
@@ -68,7 +85,7 @@ exports.renderEditPage = async function (req, res, next) {
     }
 }
 
-exports.getProducts = async function (req, res, next) {
+exports.getProductsAsFilter = async function (req, res, next) {
     try {
         const filter = req.body.filter;
         const keys = Object.keys(filter);
@@ -89,23 +106,6 @@ exports.getProducts = async function (req, res, next) {
         res.json(productsForPage);
     } catch (err) {
         console.error('필터된 상품 조회 오류:', err);
-        next(err);
-    }
-}
-
-exports.getProductDetail = async function (req, res, next) {
-    try {
-        const productCode = req.query.product_code;
-        const product = await Product.findOne({
-            where: {code: productCode},
-            include: [Gender, Age, Price, Category, Brand, Image]
-        });
-        const productForPage = await setProductInfo(product);
-        res.render('admin/productDetail', {
-            product: productForPage,
-        });
-    } catch (err) {
-        console.error('상품 상세 조회 오류:', err);
         next(err);
     }
 }
@@ -132,8 +132,19 @@ async function setProductMetaInfo(product, productInfo) {
         where: {name: productInfo.brand},
         defaults: {name: productInfo.brand}
     });
-    brand.addProduct(product);
-    return product;
+    await brand.addProduct(product);
+    await product.save({
+        fields: product._options.attributes,
+    });
+}
+
+async function addImagesOnProduct(product, imagesPathList) {
+    for (let idx = 0; idx < imagesPathList.length; ++idx) {
+        const tmpImage = await Image.create({
+            url: imagesPathList[idx],
+        });
+        await product.addImages(tmpImage);
+    }
 }
 
 exports.registerProduct = async function (req, res, next) {
@@ -161,18 +172,8 @@ exports.registerProduct = async function (req, res, next) {
             include: [Image],
         });
 
-        product = await setProductMetaInfo(product, productInfo);
-        await product.save({
-            fields: product._options.attributes,
-        });
-
-        for (let idx = 0; idx < imagesPathList.length; ++idx) {
-            const tmpImage = await Image.create({
-                url: imagesPathList[idx],
-            });
-            await product.addImages(tmpImage);
-        }
-
+        await setProductMetaInfo(product, productInfo);
+        await addImagesOnProduct(product, imagesPathList);
         res.json("Product Register complete");
     } catch (err) {
         console.error("[admin] 상품 저장 오류:", err);
@@ -198,17 +199,8 @@ exports.editProduct = async function (req, res, next) {
         product.description = productInfo.description;
         product.detail = productInfo.detail;
 
-        product = await setProductMetaInfo(product, productInfo);
-        await product.save({
-            fields: product._options.attributes,
-        });
-
-        for (let idx = 0; idx < imagesPathList.length; ++idx) {
-            const tmpImage = await Image.create({
-                url: imagesPathList[idx],
-            });
-            await product.addImages(tmpImage);
-        }
+        await setProductMetaInfo(product, productInfo);
+        await addImagesOnProduct(product, imagesPathList);
         res.json("Product Register complete");
     } catch (err) {
         console.error("[admin] 상품 저장 오류:", err);
