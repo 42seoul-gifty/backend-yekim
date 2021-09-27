@@ -6,15 +6,18 @@ module.exports = {
         const genderSeed = [];
         genderSeed.push({
             id: 1,
-            type: "전체"
+            type: "전체",
+            active: true,
         });
         genderSeed.push({
             id: 2,
-            type: "남성"
+            type: "남성",
+            active: true,
         });
         genderSeed.push({
             id: 3,
-            type: "여성"
+            type: "여성",
+            active: true,
         });
         console.log(genderSeed);
         await queryInterface.bulkInsert('genders', genderSeed, {});

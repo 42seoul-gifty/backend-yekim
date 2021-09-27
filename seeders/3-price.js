@@ -8,6 +8,7 @@ module.exports = {
             const tmpPrice = {};
             tmpPrice.id = i + 1;
             tmpPrice.range = (startPrice + i * 5000).toString();
+            tmpPrice.active = true;
             priceSeed.push(tmpPrice);
         }
         await queryInterface.bulkInsert('prices', priceSeed, {});
