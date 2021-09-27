@@ -48,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         paymentStatus: {
             type: DataTypes.STRING,
+            notNull: true,
             defaultValue: "결제대기"
         },
     }, {

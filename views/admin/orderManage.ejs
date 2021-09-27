@@ -17,10 +17,10 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-3">
+        <div class="col-2">
             <%- include ('nav') -%>
         </div>
-        <div class="col-9">
+        <div class="col-10">
             <div id="content">
                 <table id="select">
                     <tr>
@@ -77,8 +77,9 @@
                         <th scope="col">연락처</th>
                         <th scope="col">주소</th>
                         <th scope="col">상세주소</th>
-                        <th scope="col" style="width: 200px;">선택 상품</th>
+                        <th scope="col">선택 상품</th>
                         <th scope="col">배송상태</th>
+                        <th scope="col">비고</th>
                     </tr>
                     </thead>
                     <tbody id="order_list">
@@ -109,8 +110,8 @@
             orders = setOrdersInfo(orders.data);
             showOrders(orders);
 
-            $(".btn, .btn-primary").css({ marginLeft: "5px", height: "40px" })
-                .click(async function() {
+            $(".btn, .btn-primary").css({marginLeft: "5px", height: "40px"})
+                .click(async function () {
                     const filter = {
                         year: $('#year').val(),
                         month: $('#month').val(),
@@ -144,7 +145,24 @@
         }
     }
 
+    async function changeShipmentStatus(event, phone) {
+        try {
+            const axiosResult = await axios.post('/admin/order/shipment', {
+                id: event.target.name,
+                status: event.target.value,
+                phone: '0' + phone,
+            }, {
+                'Content-Type': 'application/json'
+            })
+        } catch (err) {
+            console.log("배송 상태 변경 오류:", err);
+            return ;
+        }
+    }
+
+    // TODO: order code와 NO를 구분하기
     function makeOrderRow(order) {
+        console.log(order);
         let orderRow = '<tr>';
         orderRow += `<td scope="col"><p>${order.id}</p></td>`;
         orderRow += `<td scope="col"><p>${order.gender}</p></td>`;
@@ -152,8 +170,27 @@
         orderRow += `<td scope="col"><p>${order.price}</p></td>`;
         orderRow += `<td scope="col"><p>${order.phone}</p></td>`;
         orderRow += `<td scope="col"><p>${order.address}</p></td>`;
-        orderRow += `<td scope="col"><p>${order.detailAddress}</p></td>`;
+        orderRow += `<td scope="col"><p>${order.address_detail}</p></td>`;
         orderRow += `<td scope="col"><p>${order.productName}</p></td>`;
+        if (order.shipment_status === "배송전") {
+            orderRow += `<td scope="col"><select onchange="changeShipmentStatus(event, ${order.phone})" class="form-select" name="${order.id}">
+                            <option selected>${order.shipment_status}</option>
+                            <option value="배송요청">배송요청</option>
+                            <option value="배송완료">배송완료</option>
+                          </select></td>`
+        } else if (order.shipment_status === "배송요청") {
+            orderRow += `<td scope="col"><select onchange="changeShipmentStatus(event, ${order.phone})" class="form-select" name="${order.id}">
+                            <option selected>${order.shipment_status}</option>
+                            <option value="배송전">배송전</option>
+                            <option value="배송완료">배송완료</option>
+                          </select></td>`
+        } else {
+            orderRow += `<td scope="col"><select onchange="changeShipmentStatus(event, ${order.phone})" class="form-select" name="${order.id}">
+                            <option selected>${order.shipment_status}</option>
+                            <option value="배송요청">배송요청</option>
+                            <option value="배송완료">배송완료</option>
+                          </select></td>`
+        }
         orderRow += `<td scope="col"><button type="button" class="btn btn-light"><p>삭제</button></p></td>`;
         orderRow += '</tr>'
         return orderRow;

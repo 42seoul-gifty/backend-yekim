@@ -87,7 +87,6 @@
         });
 
         let product = JSON.parse($('#result').text());
-        console.log(product);
         $('#product_category').val(product.category).prop("selected",true)
         $("#product_detail").val(product.detail.replace(/<br>/gi,'\n'));
         $('#product_images').val(product.images.join("\n"));

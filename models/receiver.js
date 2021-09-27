@@ -43,6 +43,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             notNull: true,
         },
+        shipmentStatus: {
+            type: DataTypes.STRING,
+            notNull: true,
+            defaultValue: "배송전"
+        },
     }, {
         sequelize,
         charset: 'utf8',

@@ -19,7 +19,8 @@ async function setOrderInfo(order, receiver) {
         price: priceRange,
         phone: receiverData.phone,
         address: receiverData.address,
-        detailAddress: receiverData.detailAddress,
+        shipment_status: receiverData.shipmentStatus,
+        address_detail: receiverData.detailAddress,
         productName: productName,
     };
     return ret;
@@ -56,6 +57,34 @@ exports.getOrders = async function (req, res, next) {
         res.json(ordersForPage);
     } catch (err) {
         console.error('필터된 상품 조회 오류:', err);
+        next(err);
+    }
+}
+
+function findReceiverByPhone(receivers, phone) {
+    for (let idx = 0; idx < receivers.length; ++idx) {
+        if (receivers[idx].phone === phone) {
+            return receivers[idx];
+        }
+    }
+    return null;
+}
+
+// 현재 하나의 order에 여러 receiver가 배치될 가능성을 염두함.
+// 하나의 order에 대한 여러 receiver를 조회하고, 번호로 각 receiver를 찾는 방식
+exports.changeShipmentStatus = async function (req, res, next) {
+    try {
+        const orderId = req.body.id;
+        const shipmentStatus = req.body.status;
+        const receiverPhone = req.body.phone;
+        const order = await Order.findByPk(orderId);
+        const receivers = await order.getReceiver();
+        const receiver = findReceiverByPhone(receivers, receiverPhone);
+        receiver.shipmentStatus = shipmentStatus;
+        await receiver.save({fields: ['shipmentStatus']});
+        res.redirect('/admin/order/manage');
+    } catch (err) {
+        console.error('배송 상태 변경 오류:', err);
         next(err);
     }
 }
