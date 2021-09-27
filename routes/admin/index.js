@@ -8,9 +8,11 @@ router.get('/', indexController.renderIndexPage);
 const authRouter = require('./auth');
 router.use('/auth', authRouter);
 
-const { isLoggedIn } = require('./middleware');
+const {isAuthenticated} = require('./middleware');
+router.use(isAuthenticated);
+
 const userRouter = require('./user');
-router.use('/user', isLoggedIn, userRouter);
+router.use('/user', userRouter);
 
 const productRouter = require('./product');
 router.use('/product', productRouter);

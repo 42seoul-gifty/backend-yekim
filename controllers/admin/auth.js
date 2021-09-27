@@ -1,3 +1,5 @@
+
+
 exports.renderLoginPage = function (req, res, next) {
     res.render('admin/login', {
         title: 'admin login page',

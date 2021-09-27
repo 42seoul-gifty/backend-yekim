@@ -29,7 +29,11 @@ module.exports = () => {
                 const admin = await Admin.findOne({
                     where: { email: email },
                 });
-                return done(null, admin.dataValues);
+                if (admin.password == password) {
+                    return done(null, admin.dataValues);
+                } else {
+                    return done(false, null);
+                }
             } catch (err) {
                 console.error("없는 계정입니다.", err);
                 return done(null, false, {
