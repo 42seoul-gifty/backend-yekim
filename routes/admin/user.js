@@ -6,5 +6,6 @@ const userController = require('../../controllers/admin/user');
 
 router.get('/', userController.renderUserMange);
 router.get('/manage', userController.getUsers);
+router.get('/detail', userController.renderUserDetail);
 
 module.exports = router;
