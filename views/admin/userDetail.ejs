@@ -62,7 +62,7 @@
                 <th scope="col">번호</th>
                 <th scope="col">merchant_uid</th>
                 <th scope="col">이름</th>
-                <th scope="col">번호</th>
+                <th scope="col">핸드폰</th>
                 <th scope="col">결제상태</th>
             </tr>
             </thead>
@@ -71,7 +71,7 @@
             <% for (let idx = 0; idx < user.orders.length; ++idx) { %>
                 <tr>
                     <td scope="col"><p><%= user.orders[idx].id %></p></td>
-                    <td scope="col"><p><%= user.orders[idx].merchant_uid %></p></td>
+                    <td scope="col"><p><%= user.orders[idx].merchantUid %></p></td>
                     <td scope="col"><p><%= user.orders[idx].giverName %></p></td>
                     <td scope="col"><p><%= user.orders[idx].giverPhone %></p></td>
                     <td scope="col"><p><%= user.orders[idx].paymentStatus %></p></td>

@@ -1,5 +1,6 @@
-const {Order, Gender, Age, Price, Product } = require("../../models/");
+const {Order, Gender, Age, Price, Product} = require("../../models/");
 const getModelRange = require('../../libs/getModelRange');
+const getModelList = require("../../libs/getModelList");
 
 // TODO: image, viewCount, orderCount 추가
 async function setOrderInfo(order, receiver) {
@@ -14,7 +15,11 @@ async function setOrderInfo(order, receiver) {
 
     const ret = {
         id: orderData.id,
+        merchantUid: orderData.merchantUid,
+        giverName: orderData.giverName,
+        giverPhone: orderData.giverPhone,
         gender: orderData.Gender.type,
+        paymentStatus: orderData.paymentStatus,
         age: ageRange,
         price: priceRange,
         phone: receiverData.phone,
@@ -28,6 +33,27 @@ async function setOrderInfo(order, receiver) {
 
 exports.renderOrderManage = function (req, res, next) {
     res.render('admin/orderManage');
+}
+
+exports.renderEditPage = async function (req, res, next) {
+    try {
+        const orderId = req.query.order_id;
+        const order = await Order.findOne({
+            where: {id: orderId},
+            include: [Gender, Age, Price],
+        });
+        const receivers = await order.getReceiver({
+            include: Product,
+        });
+        const orderForPage = await setOrderInfo(order, receivers[0]);
+
+        res.render('admin/orderEdit', {
+            order: orderForPage,
+        });
+    } catch (err) {
+        console.error('주문 편집 페이지 조회 오류:', err);
+        next(err);
+    }
 }
 
 // TODO: 단체 주문의 경우, Receiver 단위로 for문을 돌릴 것.
@@ -85,6 +111,63 @@ exports.changeShipmentStatus = async function (req, res, next) {
         res.redirect('/admin/order/manage');
     } catch (err) {
         console.error('배송 상태 변경 오류:', err);
+        next(err);
+    }
+}
+
+exports.renderOrderDetail = async function (req, res, next) {
+    try {
+        const orderId = req.query.order_id;
+        const order = await Order.findOne({
+            where: {id: orderId},
+            include: [Gender, Age, Price],
+        });
+        const receivers = await order.getReceiver({
+            include: Product,
+        });
+        const orderForPage = await setOrderInfo(order, receivers[0]);
+
+        res.render('admin/orderDetail', {
+            order: orderForPage,
+        });
+    } catch (err) {
+        console.error('주문 상세 조회 오류:', err);
+        next(err);
+    }
+}
+
+async function setOrderMetaInfo(order, orderInfo) {
+    const genders = await Gender.findAll({raw: true});
+    const genderList = getModelList.getGenderList(genders);
+    order.gender_id = genderList.indexOf(orderInfo.gender);
+
+    const ages = await Age.findAll({raw: true});
+    const ageList = getModelList.getAgeList(ages);
+    order.age_id = ageList.indexOf(orderInfo.age);
+
+    const prices = await Price.findAll({raw: true});
+    const priceList = getModelList.getPriceList(prices);
+    order.price_id = priceList.indexOf(orderInfo.price);
+
+    await order.save({
+        fields: ['gender_id', 'age_id', 'price_id'],
+    });
+}
+
+exports.editOrder = async function (req, res, next) {
+    try {
+        const orderInfo = req.body;
+        let order = await Order.findOne({
+            where: { id: orderInfo.id },
+            include: [Gender, Age, Price],
+        });
+        order.giverName = orderInfo.giver_name;
+        order.giverPhone = orderInfo.giver_phone;
+
+        await setOrderMetaInfo(order, orderInfo);
+        res.json("Order Register complete");
+    } catch (err) {
+        console.error("[admin] 주문 변경사항 저장 오류:", err);
         next(err);
     }
 }

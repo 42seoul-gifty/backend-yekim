@@ -188,7 +188,7 @@ exports.editProduct = async function (req, res, next) {
         const productInfo = req.body;
         const imagesPathList = productInfo.images.split('\n');
         let product = await Product.findOne({
-            where: { code: parseInt(productInfo.code, 10) },
+            where: { code: productInfo.code },
             include: [Image],
         });
 

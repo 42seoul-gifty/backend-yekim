@@ -48,7 +48,7 @@
             <tr><th>연령대</th><td><%= product.age %></td></tr>
             <tr><th>가격대</th><td><%= product.price %></td></tr>
         </table>
-        <button style="margin: 5% 40%;" type="button" class="btn btn-primary" onclick="location.href='http://localhost:4242/admin/product/edit?product_code=<%= product.code %>';">수정하기</button>
+        <button style="margin: 5% 40%;" type="button" class="btn btn-primary" onclick="location.href='<%= process.env.HOST_DOMAIN %>/admin/product/edit?product_code=<%= product.code %>';">수정하기</button>
     </div>
 </div>
 <script>
