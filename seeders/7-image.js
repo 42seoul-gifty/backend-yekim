@@ -2,7 +2,7 @@
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        const imageDir = '/tmp/uploads_example/images/';
+        const imageDir = '/public/tmp/uploads_example/images/';
         const extName = 'jpeg';
         const imageSeed = [{
             id: 1,

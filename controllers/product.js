@@ -1,21 +1,22 @@
-const { Product } = require('../models');
+const {Product} = require('../models');
 const getProductDetailForm = require('../libs/getProductDetailForm');
 const setResponseForm = require('../libs/setResponseForm');
 
 exports.getProductsByPreference = async function (req, res, next) {
-    const preferences = req.body;
+    const preferences = req.query;
+
     try {
         let productDetails = [];
         const products = await Product.findAll({
             where: {
                 gender_id: preferences.gender,
-                age_id: preferences.age,
+                age_id: preferences.gender,
                 price_id: preferences.price,
             }
         });
         for (let idx = 0; idx < products.length; ++idx) {
-           const tmpProductDetail = await getProductDetailForm(products[idx]);
-           productDetails.push(tmpProductDetail);
+            const tmpProductDetail = await getProductDetailForm(products[idx]);
+            productDetails.push(tmpProductDetail);
         }
 
         const msg = '선호에 따른 상품들이 조회되었습니다.';

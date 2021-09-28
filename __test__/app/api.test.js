@@ -11,34 +11,46 @@ beforeEach(() => {
 });
 
 const info = {
+    userId: 1,
+    orderId: 4,
+    receiverId: 4,
+    productId: 1,
+    productCode: 702,
     endPoint: "http://localhost:4242",
     case: [
        '[송신자]',
        '[수신자]'
     ],
     num: 0,
-    userId: 1,
-    orderId: 4,
-    receiverId: 4,
     preference: {
         "gender": 1,
         "age": 1,
         "price": 1,
     },
-    productCode: 702,
-    productId: 1,
 };
 
 test(`${info.case[0]} ${++info.num}. ${info.userId}번 user 조회 테스트입니다.`, async () => {
     const url = `${info.endPoint}/users/${info.userId}`;
     const axiosResult = await spyAxiosGet(url);
     const axiosData = axiosResult.data;
-    console.log('${info.userId}번 유저 조회 결과:', axiosData);
+    console.log(`${info.userId}번 유저 조회 결과:`, axiosData);
 
     expect(spyAxiosGet).toBeCalledTimes(1);
     expect(spyAxiosGet).toBeCalledWith(url);
     expect(axiosData).toHaveProperty("success", true);
     expect(axiosData.data).toHaveProperty("id", info.userId);
+});
+
+test(`${info.case[0]} ${++info.num}. 주문을 위한 preference에 따른 상품 조회 테스트입니다.`, async () => {
+    const option = info.preference;
+    const url = `${info.endPoint}/products?gender=${option.gender}&age=${option.age}&price=${option.price}`;
+    const axiosResult = await spyAxiosGet(url);
+    const axiosData = axiosResult.data;
+    console.log('preference에 따른 상품들 조회 결과:', axiosData);
+
+    expect(spyAxiosGet).toBeCalledTimes(1);
+    expect(spyAxiosGet).toBeCalledWith(url);
+    expect(axiosData).toHaveProperty("success", true);
 });
 
 test(`${info.case[0]} ${++info.num}. 주문 생성 테스트입니다.`, async () => {
