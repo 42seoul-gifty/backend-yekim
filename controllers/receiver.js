@@ -42,12 +42,16 @@ exports.pickProduct = async function (req, res, next) {
 
         for (let idx = 0; idx < likes.length; ++idx) {
             const tmpProduct = await Product.findByPk(likes[idx]);
+            tmpProduct.views += 1;
+            await tmpProduct.save({fields: ['views']});
             await receiver.addProduct(tmpProduct, {
                 through: {value: true,}
             });
         }
         for (let idx = 0; idx < dislikes.length; ++idx) {
             const tmpProduct = await Product.findByPk(dislikes[idx]);
+            tmpProduct.views += 1;
+            await tmpProduct.save({fields: ['views']});
             await receiver.addProduct(tmpProduct, {
                 through: {value: false,}
             });

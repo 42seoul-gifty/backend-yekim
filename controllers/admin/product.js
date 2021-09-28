@@ -36,6 +36,7 @@ async function setProductInfo(product) {
         likeCount: likeCount.count,
         orderCount: orderCount.count,
         retailPrice: productData.price,
+        viewCount: productData.views,
         gender: genderType,
         age: ageRange,
         price: priceRange,

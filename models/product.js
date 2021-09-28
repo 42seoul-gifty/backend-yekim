@@ -71,6 +71,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             notNull: false,
         },
+        views: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            notNull: false,
+        },
     }, {
         sequelize,
         charset: 'utf8',
