@@ -76,7 +76,7 @@ app.use('/receiver', receiverRouter);
 const adminRouter = require('./routes/admin');
 app.use('/admin', adminRouter);
 
-
+// TODO: error code에 따른 반환값 수정
 app.use(function (err, req, res, next) {
     console.error(err.stack);
     res.status(500).json('Something is wrong!');

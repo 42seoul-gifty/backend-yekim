@@ -9,6 +9,8 @@ const KAKAO_CLIENT_SECRET = process.env.KAKAO_CLIENT_SECRET;
 const KAKAO_REDIRECT_URI = process.env.KAKAO_REDIRECT_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
 
+const LOGINTYPE_KAKAO = 1;
+
 async function getUserInfoFromKakao(authCode) {
     const url = 'https://kauth.kakao.com/oauth/token';
     let params = "";
@@ -31,12 +33,13 @@ async function getUserInfoFromKakao(authCode) {
     return userInfo;
 }
 
-async function getUserInfoFromDB(accountInfo) {
+async function getUserInfoFromDB(accountInfo, loginType) {
     try {
         const [userFromDB, created] = await User.findOrCreate({
             where: {
                 name: accountInfo.profile.nickname,
                 email: accountInfo.email,
+                loginType: loginType,
             },
         });
         const userName = userFromDB.dataValues.name;
@@ -55,12 +58,12 @@ async function getUserInfoFromDB(accountInfo) {
 exports.setTokenAboutKakao = async function (req, res, next) {
     try {
         const authCode = req.headers['authorization-code'];
+        console.log("client로부터 받은 인증코드:", authCode);
         const userInfo = await getUserInfoFromKakao(authCode);
         const {kakao_account} = userInfo.data;
-        const user = await getUserInfoFromDB(kakao_account);
+        const user = await getUserInfoFromDB(kakao_account, LOGINTYPE_KAKAO);
         const {accessToken, refreshToken} = await signToken(user, true);
         user.token = refreshToken;
-        user.loginType = 1;
         await user.save({fields: ['token']});
         const userDetail = await getUserDetailForm(user);
 

@@ -164,7 +164,10 @@
     function makeOrderRow(order) {
         console.log(order);
         let orderRow = '<tr>';
-        orderRow += `<td scope="col"><p>${order.id}</p></td>`;
+        orderRow += `<td scope="col">
+                            <a onclick="window.open('/admin/order/detail?order_id=${order.id}', '주문수정', 'width=700,height=1000,left=500,top=50,status=no,menubar=no,toolbar=no,resizable=no')">
+                                ${order.id}
+                            </a></td>`;
         orderRow += `<td scope="col"><p>${order.gender}</p></td>`;
         orderRow += `<td scope="col"><p>${order.age}</p></td>`;
         orderRow += `<td scope="col"><p>${order.price}</p></td>`;

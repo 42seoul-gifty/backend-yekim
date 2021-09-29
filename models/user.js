@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         loginType: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            notNull: true
         },
         token: {
             type: DataTypes.STRING,

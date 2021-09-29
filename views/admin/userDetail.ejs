@@ -70,7 +70,11 @@
             <tbody>
             <% for (let idx = 0; idx < user.orders.length; ++idx) { %>
                 <tr>
-                    <td scope="col"><p><%= user.orders[idx].id %></p></td>
+                    <td scope="col">
+                        <a onclick="window.open('/admin/order/detail?order_id=<%= user.orders[idx].id %>', '주문수정', 'width=700,height=1000,left=500,top=50,status=no,menubar=no,toolbar=no,resizable=no')">
+                            <%= user.orders[idx].id%>
+                        </a>
+                    </td>
                     <td scope="col"><p><%= user.orders[idx].merchantUid %></p></td>
                     <td scope="col"><p><%= user.orders[idx].giverName %></p></td>
                     <td scope="col"><p><%= user.orders[idx].giverPhone %></p></td>
