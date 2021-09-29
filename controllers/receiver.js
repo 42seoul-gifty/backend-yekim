@@ -2,6 +2,7 @@ const {Receiver, Order, Product, Like} = require('../models');
 const setResponseForm = require('../libs/setResponseForm');
 const getProductDetailForm = require('../libs/getProductDetailForm');
 
+// API: GET {host}/receiver/:id
 exports.readReceiverById = async function (req, res, next) {
     const receiverId = req.params.id;
     try {
@@ -19,6 +20,7 @@ exports.readReceiverById = async function (req, res, next) {
     }
 }
 
+// API: POST {host}/receiver/:id
 exports.pickProduct = async function (req, res, next) {
     const receiverId = req.params.id;
     const receiverInfo = req.body;
@@ -66,6 +68,7 @@ exports.pickProduct = async function (req, res, next) {
 }
 
 // TODO: Receiver를 통한 주문 조회 계속해서 구현
+// API: GET {host}/:id/choice
 exports.getProductsChoiceList = async function (req, res, next) {
     const receiverId = req.params.id;
     try {

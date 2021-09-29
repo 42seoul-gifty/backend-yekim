@@ -2,6 +2,7 @@ const {Product} = require('../models');
 const getProductDetailForm = require('../libs/getProductDetailForm');
 const setResponseForm = require('../libs/setResponseForm');
 
+// API: {host}/products
 exports.getProductsByPreference = async function (req, res, next) {
     const preferences = req.query;
 
@@ -28,6 +29,7 @@ exports.getProductsByPreference = async function (req, res, next) {
     }
 }
 
+// API: {host}/products/:id
 exports.getProductByPk = async function (req, res, next) {
     const productCode = req.params.id;
     try {

@@ -1,6 +1,30 @@
-const { Age, Price, Gender } = require('../models');
+const { Gender, Age, Price } = require('../models');
 const setResponseForm = require('../libs/setResponseForm');
 
+// API: {host}/genders
+exports.getGenders = async function (req, res, next) {
+    try {
+        let genderDetails = [];
+        const genders = await Gender.findAll({
+            attributes: ["id", "type"],
+        });
+
+        for (let idx = 0; idx < genders.length; ++idx) {
+            let tmpGenderDetail = {};
+            tmpGenderDetail.id = genders[idx].dataValues.id;
+            tmpGenderDetail.value = genders[idx].dataValues.type;
+            genderDetails.push(tmpGenderDetail);
+        }
+        const msg = '성별 카테고리가 조회되었습니다.';
+        const ret = setResponseForm(true, genderDetails, msg);
+        res.json(ret);
+    } catch (err) {
+        console.error("가격대 카테고리 조회 오류:", err);
+        next(err);
+    }
+}
+
+// API: {host}/ages
 exports.getAges = async function (req, res, next) {
     try {
         let ageDetails = [];
@@ -24,6 +48,7 @@ exports.getAges = async function (req, res, next) {
     }
 }
 
+// API: {host}/prices
 exports.getPrices = async function (req, res, next) {
     try {
         let priceDetails = [];
@@ -39,27 +64,6 @@ exports.getPrices = async function (req, res, next) {
         }
         const msg = '가격대 카테고리가 조회되었습니다.';
         const ret = setResponseForm(true, priceDetails, msg);
-        res.json(ret);
-    } catch (err) {
-        console.error("가격대 카테고리 조회 오류:", err);
-        next(err);
-    }
-}
-exports.getGenders = async function (req, res, next) {
-    try {
-        let genderDetails = [];
-        const genders = await Gender.findAll({
-            attributes: ["id", "type"],
-        });
-
-        for (let idx = 0; idx < genders.length; ++idx) {
-            let tmpGenderDetail = {};
-            tmpGenderDetail.id = genders[idx].dataValues.id;
-            tmpGenderDetail.value = genders[idx].dataValues.type;
-            genderDetails.push(tmpGenderDetail);
-        }
-        const msg = '성별 카테고리가 조회되었습니다.';
-        const ret = setResponseForm(true, genderDetails, msg);
         res.json(ret);
     } catch (err) {
         console.error("가격대 카테고리 조회 오류:", err);
