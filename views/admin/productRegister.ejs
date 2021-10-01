@@ -172,12 +172,13 @@
             // }
 
             try {
-                await axios.post('http://localhost:4242/admin/product/register', formData, {
+                await axios.post('<%= process.env.HOST_DOMAIN %>/admin/product/register', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data; charset=utf-8'
                     }
                 });
                 alert("새로운 상품이 등록되었습니다.");
+                window.location.replace('<%= process.env.HOST_DOMAIN%>/admin/product/manage');
             } catch (err) {
                 console.log("form data 전송 실패", err);
             }
