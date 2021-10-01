@@ -24,9 +24,10 @@ async function setOrderInfo(order, receiver) {
         price: priceRange,
         phone: receiverData.phone,
         address: receiverData.address,
-        shipment_status: receiverData.shipmentStatus,
-        address_detail: receiverData.detailAddress,
+        shipmentStatus: receiverData.shipmentStatus,
+        addressDetail: receiverData.detailAddress,
         productName: productName,
+        createdAt: orderData.createdAt,
     };
     return ret;
 }
