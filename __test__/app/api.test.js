@@ -1,4 +1,7 @@
 const axios = require('axios');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const spyAxiosGet = jest.spyOn(axios, "get");
 const spyAxiosPost = jest.spyOn(axios, "post");
@@ -16,7 +19,7 @@ const info = {
     receiverId: 4,
     productId: 1,
     productCode: 702,
-    endPoint: "http://localhost:4242",
+    endPoint: process.env.HOST_DOMAIN,
     case: [
        '[송신자]',
        '[수신자]'
