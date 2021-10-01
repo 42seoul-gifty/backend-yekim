@@ -33,7 +33,7 @@
 
 <script>
     async function submit() {
-        const axiosResult = await axios.post('http://localhost:4242/admin/product/', {
+        const axiosResult = await axios.post('<%= process.env.HOST_DOMAIN%>/admin/product/', {
             data: 'from frontend'
         })
             .then(function(response){
