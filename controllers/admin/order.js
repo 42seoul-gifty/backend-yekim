@@ -32,6 +32,20 @@ async function setOrderInfo(order, receiver) {
     return ret;
 }
 
+async function editOrderMetaInfo(order, orderInfo) {
+    const genders = await Gender.findAll({raw: true});
+    const genderList = getModelList.getGenderList(genders);
+    order.gender_id = genderList.indexOf(orderInfo.gender);
+
+    const ages = await Age.findAll({raw: true});
+    const ageList = getModelList.getAgeList(ages);
+    order.age_id = ageList.indexOf(orderInfo.age);
+
+    const prices = await Price.findAll({raw: true});
+    const priceList = getModelList.getPriceList(prices);
+    order.price_id = priceList.indexOf(orderInfo.price);
+}
+
 exports.renderOrderManage = function (req, res, next) {
     res.render('admin/orderManage');
 }
@@ -137,24 +151,6 @@ exports.renderOrderDetail = async function (req, res, next) {
     }
 }
 
-async function setOrderMetaInfo(order, orderInfo) {
-    const genders = await Gender.findAll({raw: true});
-    const genderList = getModelList.getGenderList(genders);
-    order.gender_id = genderList.indexOf(orderInfo.gender);
-
-    const ages = await Age.findAll({raw: true});
-    const ageList = getModelList.getAgeList(ages);
-    order.age_id = ageList.indexOf(orderInfo.age);
-
-    const prices = await Price.findAll({raw: true});
-    const priceList = getModelList.getPriceList(prices);
-    order.price_id = priceList.indexOf(orderInfo.price);
-
-    await order.save({
-        fields: ['gender_id', 'age_id', 'price_id'],
-    });
-}
-
 exports.editOrder = async function (req, res, next) {
     try {
         const orderInfo = req.body;
@@ -165,7 +161,10 @@ exports.editOrder = async function (req, res, next) {
         order.giverName = orderInfo.giver_name;
         order.giverPhone = orderInfo.giver_phone;
 
-        await setOrderMetaInfo(order, orderInfo);
+        await editOrderMetaInfo(order, orderInfo);
+        await order.save({
+            fields: order._options.attributes,
+        });
         res.json("Order Register complete");
     } catch (err) {
         console.error("[admin] 주문 변경사항 저장 오류:", err);

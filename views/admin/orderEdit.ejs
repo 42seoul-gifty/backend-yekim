@@ -119,7 +119,7 @@
                     }
                 });
                 alert("수정된 주문 정보가 저장되었습니다.");
-                close();
+                window.location.href = `<%= process.env.HOST_DOMAIN %>/admin/order/detail?order_id=${data.id}`
             } catch (err) {
                 console.log("form data 전송 실패", err);
             }
