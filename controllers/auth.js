@@ -87,7 +87,7 @@ exports.setTokenAboutKakao = async function (req, res, next) {
 // API: GET {host}/token/refresh
 // error case 참고: https://github.com/auth0/node-jsonwebtoken
 exports.renewToken = async function (req, res, next) {
-    const refreshTokenFromClient = req.headers.authorization.split(' ')[1];
+    const refreshTokenFromClient = req.headers['refresh_token'].split(' ')[1];
     try {
         const user = await User.findOne({
             where: {token: refreshTokenFromClient},
