@@ -53,6 +53,7 @@ exports.renderOrderManage = function (req, res, next) {
 exports.renderEditPage = async function (req, res, next) {
     try {
         const orderId = req.query.order_id;
+        console.log("orderId:", orderId);
         const order = await Order.findOne({
             where: {id: orderId},
             include: [Gender, Age, Price],
@@ -132,21 +133,30 @@ exports.changeShipmentStatus = async function (req, res, next) {
 
 exports.renderOrderDetail = async function (req, res, next) {
     try {
-        const orderId = req.query.order_id;
+        res.render('orderDetail', {
+            orderId: req.query.order_id,
+        });
+    } catch (err) {
+        console.error('주문 상세 조회 오류:', err);
+        next(err);
+    }
+}
+
+exports.getOrderByPk = async function (req, res, next) {
+    const orderId = req.params.id;
+    try {
         const order = await Order.findOne({
             where: {id: orderId},
-            include: [Gender, Age, Price],
+            include: [Gender, Age, Price]
         });
+
         const receivers = await order.getReceiver({
             include: Product,
         });
         const orderForPage = await setOrderInfo(order, receivers[0]);
-
-        res.render('orderDetail', {
-            order: orderForPage,
-        });
+        res.json(orderForPage);
     } catch (err) {
-        console.error('주문 상세 조회 오류:', err);
+        console.error('해당 번호의 상품 조회 오류:', err);
         next(err);
     }
 }
