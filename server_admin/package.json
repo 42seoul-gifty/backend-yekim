@@ -1,0 +1,46 @@
+{
+  "name": "gifty",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "resetData": "sequelize db:seed:undo:all; sequelize db:migrate; sequelize db:seed:all",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.3",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-mysql-session": "^2.1.7",
+    "express-session": "^1.17.2",
+    "jest": "^27.2.1",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.3",
+    "mysql2": "^2.3.0",
+    "nodemon": "^2.0.12",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7",
+    "seed": "^0.4.4",
+    "sequelize": "^6.6.5",
+    "sequelize-cli": "^6.2.0",
+    "session-file-store": "^1.5.0",
+    "sqlite3": "^5.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/42seoul-gifty/backend-yekim.git"
+  },
+  "bugs": {
+    "url": "https://github.com/42seoul-gifty/backend-yekim/issues"
+  },
+  "homepage": "https://github.com/42seoul-gifty/backend-yekim#readme",
+  "description": ""
+}
