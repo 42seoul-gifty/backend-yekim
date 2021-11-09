@@ -15,7 +15,7 @@ module.exports = async function(userInfo, refreshTokenFlag) {
     });
     if (refreshTokenFlag) {
         tokens.refreshToken = await jwt.sign(payload, secret, {
-            expiresIn: '3m',
+            expiresIn: '10m',
             issuer: 'World'
         });
     }

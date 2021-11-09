@@ -56,6 +56,8 @@ async function getUserInfoFromDB(accountInfo, loginType) {
 
 // API: GET {host}/login/kakao
 exports.setTokenAboutKakao = async function (req, res, next) {
+    console.log("/login/kakao router에 들어왔습니다.");
+    console.log(req.method);
     try {
         const authCode = req.headers['authorization-code'];
         console.log("client로부터 받은 인증코드:", authCode);
@@ -87,7 +89,7 @@ exports.setTokenAboutKakao = async function (req, res, next) {
 // API: GET {host}/token/refresh
 // error case 참고: https://github.com/auth0/node-jsonwebtoken
 exports.renewToken = async function (req, res, next) {
-    const refreshTokenFromClient = req.headers.authorization.split(' ')[1];
+    const refreshTokenFromClient = req.headers['refresh_token'].split(' ')[1];
     try {
         const user = await User.findOne({
             where: {token: refreshTokenFromClient},

@@ -24,6 +24,8 @@ router.get('/login/kakao', authController.setTokenAboutKakao);
 router.get('/token/refresh', authController.renewToken);
 router.post('/logout', authController.removeToken);
 
+//router.use(verifyToken);
+
 const productRouter = require('../routes/product');
 router.use('/products', productRouter);
 
